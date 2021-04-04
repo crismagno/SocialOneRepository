@@ -1,9 +1,8 @@
 import { Dimensions, StyleSheet } from "react-native";
 import { setSize } from "../../helpers/responsive/Index";
-import Colors from "./../../assets/general/colors";
+import { colorsSocial } from "./../../assets/general/colors";
 
 const { height: HEIGHT } = Dimensions.get("window");
-const { signIn: { colors } } = Colors;
 
 const styles = StyleSheet.create({
     container: {
@@ -12,7 +11,7 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: setSize(30),
         justifyContent: "center",
-        backgroundColor: colors[0]
+        backgroundColor: colorsSocial.colorA1
     },
     containerLogo: {
         alignItems: "center"
@@ -21,7 +20,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     input: {
-        backgroundColor: colors[0],
+        backgroundColor: colorsSocial.colorA1,
         marginTop: setSize(10)
     },
     buttonSignIn: {
@@ -31,10 +30,10 @@ const styles = StyleSheet.create({
         marginTop: setSize(5)
     },
     textCreate: {
-        color: "#FFF"
+        color: colorsSocial.colorA1
     },
     textRequired: {
-        color: "red",
+        color: colorsSocial.colorA3,
         fontSize: setSize(14),
         marginLeft: setSize(5),
         marginTop: setSize(3)

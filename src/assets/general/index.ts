@@ -1,6 +1,6 @@
-import images from "./images";
-import colors from "./colors";
-import responsive from "../../helpers/responsive/Index";
+import * as images from "./images";
+import * as colors from "./colors";
+import * as responsive from "../../helpers/responsive/Index";
 
 export default {
     images,

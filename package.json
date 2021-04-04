@@ -7,7 +7,14 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "android:dev": "react-native run-android --appIdSuffix debug",
+    "clean:debug": "cd android/ && ./gradlew clean && cd .. && react-native run-android --appIdSuffix debug",
+    "clean:android": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
+    "clean:build": "cd android/ && ./gradlew clean &&  ./gradlew assembleRelease",
+    "android:build": "cd android && ./gradlew assembleRelease",
+    "android:bundle": "cd android && ./gradlew bundleRelease",
+    "android:install": "cd android && ./gradlew assembleRelease && ./gradlew installRelease"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
@@ -24,9 +31,14 @@
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^2.18.1",
+    "react-native-svg-transformer": "^0.14.3",
     "react-native-text-input-mask": "^3.1.2",
     "react-native-tiny-toast": "^1.0.7",
-    "react-native-vector-icons": "^8.1.0"
+    "react-native-vector-icons": "^8.1.0",
+    "react-redux": "^7.2.3",
+    "redux": "^4.0.5",
+    "socket-client": "^1.0.0",
+    "socket.io-client": "^4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

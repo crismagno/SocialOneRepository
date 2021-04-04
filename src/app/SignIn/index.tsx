@@ -1,119 +1,143 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import Logo from "./../../elements/Logo/index";
 import styles from "./styles";
-import { Button, TextInput } from "react-native-paper"
-import { Toast } from "./../../elements/ToastSocial";
+import { Button, TextInput } from "react-native-paper";
+import { ToastSocial } from "./../../elements/ToastSocial";
 import If from "./../../elements/If"
-import  { user as userService }  from "./../../services/index";
+import { user as userService } from "./../../services/index";
 import { IUserSignIn } from "../../services/user/types";
 import { IUser } from "../../types";
 import { errorHandling, validateEmail } from "./../../helpers/global";
+import ButtonGradient from "../../elements/ButtonGradient";
+import localStorage from "./../../infra/localStorage";
+import actionsUser from "./../../reduxStore/actions/user";
+import { StateRequestSocial } from "../../helpers/request/StateRequestSocial";
 
 const SignIn: React.FC = (props): JSX.Element  => {
+
+    const {
+        setUserOnState 
+    } = actionsUser();
 
     const [user, setUser] = useState<IUserSignIn>({
         email: "",
         password: "",
     });
-
-    const [inputs, setInputs] = useState({
-        email: false,
-        emailFormat: false,
-        password: false,
+    const [inputsError, setInputsError] = useState({
+        email: "",
+        password: "",
     });
+    const [load, setLoad] = useState<boolean>(false);
 
-    const validateInputs = () => {
+    useEffect(() => {
+        componentDidMount();
+    }, []);
+
+    const componentDidMount = async (): Promise<void> => {
+        await localStorage.removeUser();
+    };
+
+    const validateInputs = (): boolean => {
         let numInputsInvalid = 0
         for (const key in user) {
             if (user[key].trim() === "") {
                 numInputsInvalid++;
-                setInputs(inp => ({ ...inp, [key]: true}));
+                setInputsError(inp => ({ ...inp, [key]: "Field is required"}));
             } else {
                 if (key === "email") {
                     if (!validateEmail(user[key])) {
                         numInputsInvalid++;
-                        setInputs(inp => ({ ...inp, email: false, emailFormat: true}));
+                        setInputsError(inp => ({ ...inp, email: "E-mail format invalid"}));
                     } else {
-                        setInputs(inp => ({ ...inp, email: false, emailFormat: false}));
+                        setInputsError(inp => ({ ...inp, email: ""}));
                     }
                 } else {
-                    setInputs(inp => ({ ...inp, [key]: false}));
+                    setInputsError(inp => ({ ...inp, [key]: ""}));
                 }
             }
         };
 
         if (numInputsInvalid > 0) {
-            Toast("Fill in the required fields", 1000, true);
+            ToastSocial({ message: "Fill in the required fields", type: "danger" });
             return true;
         };
 
         return false;
     };
 
-    const clearUser = () => {
+    const clearUser = (): void => {
         setUser({
             email: "",
             password: "",
         });
     };
 
-    const signIn = async () => {
+    const goToRoute = (route: string): void => {
+        props.navigation.navigate(route);
+    };
+
+    const signIn = async (): Promise<void> => {
         try {
-            if (validateInputs()) return false;
+            if (validateInputs()) return;
+            setLoad(true);
             const userResponse: IUser = await userService.signIn(user);
+            setUserOnState(userResponse);
+            localStorage.setUser(userResponse);
+            StateRequestSocial.setTokenState(userResponse.token);
             clearUser();
-            Toast("Login with success!");
+            ToastSocial({ message: "Login Success" });
+            goToRoute("VerifyCode");
         } catch (error) {
-            Toast(errorHandling(error), 2000, true);
+            ToastSocial({ message: errorHandling(error), type: "danger" });
+        } finally {
+            setLoad(false);
         };
     };
 
     return <View style={styles.container}>
         <View style={styles.containerLogo}>
-            <Logo/>
+            <Logo width={200}/>
         </View>
 
         <TextInput
             style={styles.input}
-            onFocus={() => setInputs(input => ({ ...input, email: false, emailFormat: false }))}    
+            onFocus={() => setInputsError(input => ({ ...input, email: "" }))}    
             keyboardType="email-address"
             mode="outlined"
             label="Email"
-            value={user.email}
-            error={inputs.email || inputs.emailFormat}
+            value={["user"]["email"]}
+            error={!!inputsError.email.trim()}
             onChangeText={text => setUser({ ...user, email: text })}
         />
-        <If condition={inputs.email}>
-            <Text style={styles.textRequired}>Email is required</Text>
-        </If>
-        <If condition={inputs.emailFormat}>
-            <Text style={styles.textRequired}>Format email is invalid</Text>
+        <If condition={!!inputsError.email.trim()}>
+            <Text style={styles.textRequired}>{inputsError.email}</Text>
         </If>
 
         <TextInput
             style={styles.input}
-            onFocus={() => setInputs(input => ({ ...input, password: false }))}
+            onFocus={() => setInputsError(input => ({ ...input, password: "" }))}
             secureTextEntry={true}
             mode="outlined"
             label="Password"
             value={user.password}
-            error={inputs.password}
+            error={!!inputsError.password.trim()}
             onChangeText={text => setUser({ ...user, password: text })}
         />
-        <If condition={inputs.password}>
-            <Text style={styles.textRequired}>Password is required</Text>
+        <If condition={!!inputsError.password.trim()}>
+            <Text style={styles.textRequired}>{inputsError.password}</Text>
         </If>
 
-        <Button 
+        <ButtonGradient 
             style={styles.buttonSignIn}
-            mode="contained" 
-            onPress={() => signIn()}>
-            <Text style={styles.textCreate}>SignIn</Text>
-        </Button>
+            label="signin"
+            toUpperCase={true}
+            load={load}
+            onPress={() => signIn()}
+        />
         <Button
             style={styles.buttonSignUp} 
-            onPress={() => props.navigation.navigate("SignUp")}>
+            onPress={() => goToRoute("SignUp")}>
             Create Account?
         </Button>
     </View>;

@@ -1,5 +1,7 @@
 import * as user from "./user";
+import * as code from "./code";
 
 export {
-    user
+    user,
+    code,
 };

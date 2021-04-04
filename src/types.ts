@@ -6,10 +6,9 @@ export interface IUser {
     phone: string;
     token: string;
 };
-
 export interface IUserCreate {
     fullName: string;
     email: string;
     phone: string;
     password: string;
-}
+};
