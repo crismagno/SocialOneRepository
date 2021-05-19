@@ -2,10 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import variablesSocket from './../../reducers/socket/variables';
 import {IActionsSocket} from './types';
 import {ISocketStore} from "./../../reducers/socket/types"
-const ActionsSocketStore = (): IActionsSocket => {
+import { ICombineReducers } from "./../../types";
+
+const ActionsSocket = (): IActionsSocket => {
 
   const dispatch = useDispatch();
-	const socketStateStore = useSelector<any>(state => state.socket) as ISocketStore;
+	const socketStateStore: ISocketStore = useSelector((state: ICombineReducers): ISocketStore => state.socket);
 
   const connectSocket = (): void => {
     dispatch({
@@ -26,4 +28,4 @@ const ActionsSocketStore = (): IActionsSocket => {
   };
 };
 
-export default ActionsSocketStore;
+export default ActionsSocket;

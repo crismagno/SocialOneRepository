@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     borderRadius: setSize(5),
   },
   button: {
+    flexDirection: "row",
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     color: colorsSocial.colorA1,
     backgroundColor: 'transparent',
     fontWeight: 'bold',
+    marginRight: setSize(5),
   },
   viewLoading: {
     justifyContent: 'center',

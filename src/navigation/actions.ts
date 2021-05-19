@@ -2,11 +2,12 @@
  * In this file events, references actions that use navigaton
  */
 import { CommonActions } from '@react-navigation/native';
+import { TRouteRedirect } from '../types';
 
-export default props => {
+const actionsNavigation = props => {
 
     // reset history and redirect to route passed with param
-    const resetHistory = (routeRedirect: string): void|boolean => {
+    const resetHistory = (routeRedirect: TRouteRedirect): void|false => {
         let navigation = props && props.navigation;
 
         if (!navigation) {
@@ -20,9 +21,11 @@ export default props => {
             ],
         });
         navigation.dispatch(reset);
-    }
+    };
 
     return {
-        resetHistory
+        resetHistory,
     };
 };
+
+export default actionsNavigation;

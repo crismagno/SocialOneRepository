@@ -13,31 +13,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: colorsSocial.colorA1
     },
-    containerLogo: {
-        alignItems: "center"
-    },
-    containerInputs: {
-        justifyContent: "center"
-    },
-    input: {
-        backgroundColor: colorsSocial.colorA1,
-        marginTop: setSize(10)
-    },
-    buttonSignIn: {
-        marginTop: setSize(15)
-    },
-    buttonSignUp: {
-        marginTop: setSize(5)
-    },
-    textCreate: {
-        color: colorsSocial.colorA1
-    },
-    textRequired: {
-        color: colorsSocial.colorA3,
-        fontSize: setSize(14),
-        marginLeft: setSize(5),
-        marginTop: setSize(3)
-    }
 });
 
 export default styles;

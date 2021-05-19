@@ -3,10 +3,7 @@ import {ISocketStore} from './types';
 import variablesSocket from './variables';
 import io from 'socket.io-client';
 import {StateRequestSocial} from '../../../helpers/request/StateRequestSocial';
-
-export const initialState: ISocketStore = {
-  socket: null,
-};
+import { initialState } from './initialState';
 
 export const reducer = (
   state: ISocketStore = initialState,
@@ -20,6 +17,9 @@ export const reducer = (
         ...state,
         socket: io(StateRequestSocial.url, {
           transports: ['websocket'],
+          forceNew: true,
+          reconnectionDelay: 1000,
+          reconnection: true
         }),
       };
     case variablesSocket.DISCONNECT_SOCKET:

@@ -1,15 +1,7 @@
 import {IActionReducer} from '../types';
+import { initialState } from './initialState';
 import {IUserStore} from './types';
 import {userStore} from './variables';
-
-export const initialState: IUserStore = {
-  _id: null,
-  fullName: null,
-  email: null,
-  phone: null,
-  avatar: null,
-  token: null,
-};
 
 export const reducer = (
   state: IUserStore = initialState,
@@ -20,6 +12,10 @@ export const reducer = (
   switch (type) {
     case userStore.SET_USER:
       return payload;
+    case userStore.UPDATE_STATUS_ONLINE:
+      return {
+        ...state, online: payload
+      };
     default:
       return state;
   }

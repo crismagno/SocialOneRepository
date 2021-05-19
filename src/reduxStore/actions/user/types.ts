@@ -1,7 +1,8 @@
-import { Reducer, ReducerState } from "react";
 import { IUser } from "../../../types";
+import { IUserStore } from "../../reducers/user/types";
 
 export interface IActionsUser {
-    userState: ReducerState<Reducer<any, any>>;
+    userState: IUserStore;
     setUserOnState: (user: IUser) => void;
+    updateStatusOnline: (status: boolean) => void;
 };

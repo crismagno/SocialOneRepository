@@ -1,7 +1,7 @@
-import { Reducer, ReducerState } from "react";
+import { ISocketStore } from "../../reducers/socket/types";
 
 export interface IActionsSocket {
-    socketStateStore: ReducerState<Reducer<any, any>>;
+    socketStateStore: ISocketStore;
     connectSocket: () => void;
     disconnectSocket: () => void;
 };

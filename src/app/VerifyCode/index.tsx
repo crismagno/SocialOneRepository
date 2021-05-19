@@ -11,6 +11,8 @@ import localStorage from "./../../infra/localStorage"
 import { colorsSocial } from "../../assets/general/colors";
 import { errorHandling } from "../../helpers/global";
 import actionsNavigation from "./../../navigation/actions"
+import { TRouteRedirect } from "../../types";
+import * as Animatable from "react-native-animatable";
 
 const VerifyCode: React.FC = (props): JSX.Element => {
 
@@ -27,7 +29,7 @@ const VerifyCode: React.FC = (props): JSX.Element => {
     const [code, setCode] = useState<string[]>(inputsArrayString);
     const [load, setLoad] = useState<boolean>(false);
 
-    const goToRoute = (route: string): void => {
+    const goToRoute = (route: TRouteRedirect): void => {
         execActionsNavigation.resetHistory(route);
     };
 
@@ -79,7 +81,9 @@ const VerifyCode: React.FC = (props): JSX.Element => {
                 userId: userState._id,
                 code: codeBody
             });
-            localStorage.setUser(userState);
+            await localStorage.setUser(userState);
+            await localStorage.setStep("App");
+            goToRoute("App");
             ToastSocial({ message: response.message });
         } catch (error) {
             ToastSocial({ message: errorHandling(error), type: "danger" });
@@ -103,36 +107,43 @@ const VerifyCode: React.FC = (props): JSX.Element => {
         <Image  style={styles.imageTop} source={backgrounds[0]} />
         <Image  style={styles.imageBottom} source={backgrounds[2]} />
         <View style={styles.containerTop}>
-            <Button 
-                color={colorsSocial.colorA1}
-                style={styles.buttonTopLeft}
-                icon="arrow-left" 
-                onPress={() => goToRoute("SignIn")}>
-                SIGNIN
-            </Button>
+            <Animatable.View
+                animation={"fadeInDown"}>
+                <Button 
+                    color={colorsSocial.colorA1}
+                    style={styles.buttonTopLeft}
+                    icon="arrow-left" 
+                    onPress={() => goToRoute("SignIn")}>
+                    {"SIGNIN"}
+                </Button>
+            </Animatable.View>
         </View>
         <View style={styles.containerCenter}>
             <Text style={styles.textSend}>Social Send</Text>
             <View style={styles.viewInputsCode}>
                 {code.map((_, index: number): JSX.Element => {
-                    return <TextInput
-                        key={index}                
-                        onSubmitEditing={() => 
-                            (index !== code.length -1) && inputsRef[index+1].current.focus()
-                        }
-                        ref={inputsRef[index]}
-                        blurOnSubmit={false}
-                        style={styles.inputCode}
-                        onChangeText={text => changeInput(text, index)}
-                        value={code[index]}
-                        maxLength={1}
-                        selectionColor={colorsSocial.colorA3}
-                    />
+                    return <Animatable.View 
+                        animation={"flipInY"}
+                        duration={2000}
+                        key={index}>
+                        <TextInput                
+                            onSubmitEditing={() => 
+                                (index !== code.length -1) && inputsRef[index+1].current.focus()
+                            }
+                            ref={inputsRef[index]}
+                            blurOnSubmit={false}
+                            style={styles.inputCode}
+                            onChangeText={text => changeInput(text, index)}
+                            value={code[index]}
+                            maxLength={1}
+                            selectionColor={colorsSocial.colorA3}
+                        />
+                    </Animatable.View>
                 })}
             </View>
             <View style={styles.viewInformation}>
                 <Text style={styles.textUserInfo}>
-                    Olá {userState.fullName}! 
+                    Hello {userState.fullName}! 
                     We have some informations for you above.
                 </Text>
                 <Text style={styles.textInfo}>
@@ -149,9 +160,11 @@ const VerifyCode: React.FC = (props): JSX.Element => {
                 toUpperCase={true}
                 load={load}
                 onPress={() => validateCode()}
+                animationInitial={"fadeIn"}
+                animationClick={"pulse"}
             />
             <Button onPress={() => resendCode()}>
-                resend
+                {"resend"}
             </Button>
         </View>
     </View>;

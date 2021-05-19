@@ -1,9 +1,15 @@
 import * as images from "./images";
-import * as colors from "./colors";
+import { colorsSocial } from "./colors";
 import * as responsive from "../../helpers/responsive/Index";
 
 export default {
     images,
-    colors,
+    colorsSocial,
+    responsive
+};
+
+export {
+    images,
+    colorsSocial,
     responsive
 };
