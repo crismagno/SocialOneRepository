@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         height: setSize(50),
     },
     viewOnline: (isOnline: boolean, borderColor: string): ViewStyle => {
-        const backgroundColor = isOnline ? "#00A800" : "gray";
+        const backgroundColor = isOnline ? "#65ec99" : "gray";
         return {
             position: "absolute",
             right: setSize(7),
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
             borderRadius: setSize(10),
             backgroundColor,
             borderColor,
-            borderWidth: 0.5,
+            borderWidth: setSize(0.5),
         }
     }
 

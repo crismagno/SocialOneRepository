@@ -5,4 +5,5 @@ export interface ISignInCenterProps {
     setUser: (user: IUserSignIn) => void;
     inputsError: IUserSignIn;
     setInputsError: (user: IUserSignIn) => void;
+    onSubmit: () => void;
 };

@@ -11,7 +11,8 @@ const SignInBottom: React.FC<ISignInBottomProps> = (props): JSX.Element  => {
             style={styles.buttonSignIn}
             label={"signin"}
             toUpperCase={true}
-            load={props.load}
+            load={props?.load}
+            typeLoad={1}
             onPress={props.signIn}
             animationInitial={"fadeIn"}
             animationClick={"pulse"}

@@ -1,47 +1,47 @@
-import React from "react";
-import { View, Dimensions } from "react-native";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import * as Animatable from "react-native-animatable";
-import { setSize } from "../../helpers/responsive/Index";
+import React, {useEffect, useState, useRef, memo} from 'react';
+import * as Animatable from 'react-native-animatable';
+import LoadGif from '../LoadGif';
+import If from '../If';
+import styles from './styles';
+import { ILoadingProps } from './types';
 
-const { height: HEIGHT, width: WIDTH } = Dimensions.get("window");
+export const Loading: React.FC<ILoadingProps> = (props): JSX.Element => {
+  useEffect(() => {
+    animationShow();
+  }, [props.show]);
 
-const Loading: React.FC = (props): JSX.Element => {
-    return <View style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#0003",
-        position: "absolute",
-        left: setSize(0),
-        top: setSize(0),
-        width: WIDTH,
-        height: HEIGHT,
-        zIndex: 10000
-    }}>
-        <Animatable.View 
-            animation={"fadeIn"}
-            style={{
-                backgroundColor: "#29292999",
-                height: setSize(100),
-                width: setSize(100),
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: setSize(7),
-            }}>
-            <Animatable.View
-                animation={"rotate"}
-                duration={1500}
-                easing="ease-in-out"
-                iterationCount="infinite">
-                <AntDesign 
-                    name={"loading1"}
-                    size={setSize(17)}
-                    color={"#FFF"}
-                />
-            </Animatable.View>
+  const animationShow = async () => {
+    if (props.show) {
+      await loadBoxAnimationRef.current?.animate('fadeIn', 1000, 1500);
+    } else {
+      await loadBoxAnimationRef.current?.animate('fadeOut', 500, 500);
+    }
+    setShow(props.show);
+  };
+
+  const [show, setShow] = useState<boolean>(props.show);
+  const loadBoxAnimationRef = useRef<any>(null);
+
+  return (
+    <If condition={show}>
+      <Animatable.View style={styles.container}>
+        <Animatable.View
+          ref={loadBoxAnimationRef}
+          animation={'fadeIn'}
+          duration={1000}
+          style={styles.containerInto}>
+          <LoadGif type={1} />
+          <If condition={!!props?.description?.trim()}>
+            <Animatable.Text
+              style={styles.textDescription}
+              animation={'flipInX'}>
+              {props.description}
+            </Animatable.Text>
+          </If>
         </Animatable.View>
-    </View>
+      </Animatable.View>
+    </If>
+  );
 };
 
-export default Loading;
+export default memo(Loading);

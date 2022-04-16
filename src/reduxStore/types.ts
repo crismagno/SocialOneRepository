@@ -1,11 +1,15 @@
-import { IPeopleStore } from "./reducers/people/types";
-import { ISocketStore } from "./reducers/socket/types";
-import { IUserStore } from "./reducers/user/types";
-import { IChatStore } from "./reducers/chat/types";
+import { ISocketInitialState } from "./socket/types";
+import { IUserInitialState } from "./user/types";
+import { IProfileInitialState } from "./profile/types";
+import { IPeopleInitialState } from "./people/types";
+import { IChatInitialState } from "./chat/types";
+import { IConversationInitialState } from "./conversation/types";
 
 export interface ICombineReducers {
-    user: IUserStore;
-    socket: ISocketStore;
-    people: IPeopleStore;
-    chats: IChatStore;
+    user: IUserInitialState;
+    socket: ISocketInitialState;
+    people: IPeopleInitialState;
+    chats: IChatInitialState;
+    profile: IProfileInitialState;
+    conversation: IConversationInitialState;
 };

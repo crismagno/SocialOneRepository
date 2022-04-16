@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import styles from "./styles";
-import { ToastSocial } from "./../../elements/ToastSocial";
 import { user as userService } from "./../../services/index";
 import { IUserSignIn } from "../../services/user/types";
 import { IUser } from "../../types";
 import { errorHandling, validateEmail } from "./../../helpers/global";
 import localStorage from "./../../infra/localStorage";
-import { IndexActionsStore } from "./../../reduxStore/actions";
+import { IndexActionsStore } from "./../../reduxStore";
 import { StateRequestSocial } from "../../helpers/request/StateRequestSocial";
 import SignInTop from "./components/Top";
 import SignInCenter from "./components/Center";
 import SignInBottom from "./components/Bottom";
+import { SnackBarSocialDefault } from "./../../elements";
+import { colorsSocial } from "../../assets/general";
 
-const SignIn: React.FC = (props): JSX.Element  => {
+const SignIn: React.FC<any> = (props): JSX.Element  => {
 
     const {
         actionsUser 
@@ -23,17 +24,17 @@ const SignIn: React.FC = (props): JSX.Element  => {
         email: "",
         password: "",
     });
-    const [inputsError, setInputsError] = useState({
+    const [inputsError, setInputsError] = useState<IUserSignIn>({
         email: "",
         password: "",
     });
     const [load, setLoad] = useState<boolean>(false);
 
     useEffect(() => {
-        componentDidMount();
+        componentWillMount();
     }, []);
 
-    const componentDidMount = async (): Promise<void> => {
+    const componentWillMount = async (): Promise<void> => {
         await localStorage.removeUser();
         await localStorage.removeStep();
     };
@@ -59,7 +60,12 @@ const SignIn: React.FC = (props): JSX.Element  => {
         };
 
         if (numInputsInvalid > 0) {
-            ToastSocial({ message: "Fill in the required fields", type: "danger" });
+            SnackBarSocialDefault({
+                text: "Fill in the required fields",
+                duration: "LENGTH_LONG",
+                textColor: colorsSocial.colorA3,
+                colorButton: colorsSocial.colorA3
+            });
             return true;
         };
 
@@ -73,9 +79,7 @@ const SignIn: React.FC = (props): JSX.Element  => {
         });
     };
 
-    const goToRoute = (route: string): void => {
-        props.navigation.navigate(route);
-    };
+    const goToRoute = (route: string): void => props.navigation.navigate(route);
 
     const signIn = async (): Promise<void> => {
         try {
@@ -85,17 +89,20 @@ const SignIn: React.FC = (props): JSX.Element  => {
             
             const userResponse: IUser = await userService.signIn(user);
 
-            actionsUser.setUserOnState(userResponse);
+            actionsUser.setUser(userResponse);
             clearUser();
             
-            localStorage.setUser(userResponse);
-            localStorage.setStep("VerifyCode");
+            await localStorage.setUser(userResponse);
+            await localStorage.setStep("VerifyCode");
             StateRequestSocial.setTokenState(userResponse.token);
-            
-            ToastSocial({ message: "Login Success" });
             goToRoute("VerifyCode");
         } catch (error) {
-            ToastSocial({ message: errorHandling(error), type: "danger" });
+            SnackBarSocialDefault({
+                text: errorHandling(error),
+                duration: "LENGTH_LONG",
+                textColor: colorsSocial.colorA3,
+                colorButton: colorsSocial.colorA3
+            });
         } finally {
             setLoad(false);
         };
@@ -108,6 +115,7 @@ const SignIn: React.FC = (props): JSX.Element  => {
             setUser={setUser}
             inputsError={inputsError}
             setInputsError={setInputsError}
+            onSubmit={() => signIn()}
         />
         <SignInBottom 
             load={load}

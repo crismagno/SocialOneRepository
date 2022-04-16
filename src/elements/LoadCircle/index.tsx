@@ -1,20 +1,24 @@
-import React from 'react';
-import {Image} from 'react-native';
-import {loads} from '../../assets/general/images';
+import React, {memo} from 'react';
 import {setSize} from '../../helpers/responsive/Index';
-import { ILoadCircleProps } from './types';
+import {ILoadCircleProps} from './types';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import * as Animatable from 'react-native-animatable';
 
-const LoadCircle: React.FC<ILoadCircleProps> = (props): JSX.Element => {
-  const size = setSize(props.size || 20);
+export const LoadCircle: React.FC<ILoadCircleProps> = (props): JSX.Element => {
   return (
-    <Image
-      style={{
-        width: size,
-        height: size,
-      }}
-      source={loads[0]}
-    />
+    <Animatable.View
+      animation={'rotate'}
+      duration={props.duration || 1000}
+      iterationDelay={props.iterationDelay || 10}
+      easing="ease-in-out"
+      iterationCount="infinite">
+      <AntDesign
+        name={'loading1'}
+        size={setSize(props.size || 20)}
+        color={props.color}
+      />
+    </Animatable.View>
   );
 };
 
-export default LoadCircle;
+export default memo(LoadCircle);

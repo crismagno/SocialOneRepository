@@ -1,124 +1,117 @@
-import React, { useEffect,  useRef,  useState } from "react";
-import { View, Text, Image, Animated, TouchableOpacity } from "react-native";
-import styles from "./styles";
-import * as Animatable from "react-native-animatable";
-import { setSize } from "./../../helpers/responsive/Index";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { ICardLlistChatProps } from "./types";
-import { colorImageIsLight } from "./../../helpers/global";
-import If from "./../../elements/If";
-import { images } from "../../assets/general";
-import IconMessageType from "../../elements/IconMessageType";
-import TextMessageType from "../../elements/TextMessageType";
-import HoursMessage from "../../elements/HoursMessage";
+import React, {memo, useEffect, useRef, useState} from 'react';
+import {View, Text, Image, Animated, TouchableOpacity} from 'react-native';
+import styles from './styles';
+import * as Animatable from 'react-native-animatable';
+import {ICardLlistChatProps} from './types';
+import If from './../../elements/If';
+import {images} from '../../assets/general';
+import IconMessageType from '../../elements/IconMessageType';
+import TextMessageType from '../../elements/TextMessageType';
+import MessageTypeAction from '../../elements/MessageTypeAction';
+import HoursMessage from '../../elements/HoursMessage';
+import {getFileByPath} from '../../helpers/files';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import StatusSendMessage from '../../elements/StatusSendMessage';
 
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(
+  TouchableOpacity,
+);
 
-const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element => {
+export const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element => {
+  useEffect(() => {
+    if (props.animationInitial) {
+      animationButtonRef.current?.animate(
+        props.animationInitial,
+        props.animationDuration || 500,
+      );
+    }
+  }, []);
 
-    const [colorText, setColorText] = useState("#FFF");
-    const [avatar, setAvatar] = useState(props.avatar);
-    const animationButtonRef = useRef(null);
+  useEffect(() => {
+    setAvatar(
+      props?.avatar ? {uri: getFileByPath(props?.avatar)} : images.avatars[0],
+    );
+  }, [props?.avatar]);
 
-    useEffect(() => {
-        if (props.animationInitial) {
-            const animation = animationButtonRef.current[`${props.animationInitial}`];
-            animation(props.animationDuration || 500);
-        }
-    }, []);
+  const colorText = props?.colorComponents;
+  const [avatar, setAvatar] = useState(
+    props?.avatar ? {uri: getFileByPath(props?.avatar)} : images.avatars[0],
+  );
+  const animationButtonRef = useRef(null);
 
-    useEffect(() => {
-        colorTextByImage();
-    }, [props.image]);
+  const onPressCard = (): void => {
+    if (props.animationPress) {
+      animationButtonRef.current.animate(props.animationPress, 150);
+    }
+    props.onPressCard && props.onPressCard();
+  };
 
-    // change color of text fo card by image color dominant
-    const colorTextByImage = async (): Promise<void> => {
-        const colorIsLight = await colorImageIsLight(props.image)
-        if (colorIsLight) {
-            setColorText("#313131");
-            return;
-        }
-        if (!colorIsLight) {
-            setColorText("#FFF");
-            return;
-        };
-    };
+  const onErrorAvatar = (error: any): void => {
+    if (error) setAvatar(images.avatars[0]);
+  };
 
-    const onPressCard = (): void => {
-        if (props.animationPress) {
-            const animation = animationButtonRef.current[`${props.animationPress}`];
-            animation(150);
-        }
-    };
-
-    const onErrorAvatar = (error: any): void => {
-        console.log("ERRORORORO IMAGA AVATAR======>>>>>>", error)
-        if (error) {
-            setAvatar(images.avatars[0]);
-        }
-    };
-
-    return <Animatable.View
-        ref={animationButtonRef}>
-        <AnimatedTouchableOpacity 
-            onPress={() => onPressCard()}
-            activeOpacity={0.9}
-            style={[
-                styles.cardListChat,
-                props.style
-            ]}>
-            <TouchableOpacity
-                activeOpacity={0.9}
-                style={styles.containerImage}>     
-                <Image
-                    style={styles.avatar}
-                    source={images.avatars[0]}
-                    onError={onErrorAvatar}
+  return (
+    <>
+      {/* <Swipeable renderRightActions={renderRightActions}> */}
+      <Animatable.View ref={animationButtonRef}>
+        <AnimatedTouchableOpacity
+          onPress={() => onPressCard()}
+          activeOpacity={0.9}
+          style={[styles.cardListChat, props.style]}>
+          <TouchableOpacity activeOpacity={0.9} style={styles.containerImage}>
+            <Image
+              style={styles.avatar}
+              source={avatar}
+              onError={onErrorAvatar}
+            />
+            <Animatable.View
+              style={styles.viewOnline(props.online, colorText)}
+            />
+          </TouchableOpacity>
+          <View style={styles.boxOfListCenter}>
+            <If condition={!!props.textTitle}>
+              <TouchableOpacity activeOpacity={0.5}>
+                <Text style={styles.textNameChat(colorText)} numberOfLines={1}>
+                  {props.textTitle}
+                </Text>
+              </TouchableOpacity>
+            </If>
+            <If condition={!!props.textSubtitle}>
+              <TouchableOpacity style={styles.containerLastMessage}>
+                <IconMessageType
+                  type={props.typeMessage}
+                  colorIcon={colorText}
+                  messageIsDisabled={props?.messageIsDisabled}
                 />
-                <Animatable.View
-                    style={styles.viewOnline(props.online, colorText)} 
+                <TextMessageType
+                  colorText={colorText}
+                  type={props.typeMessage}
+                  valueText={props?.textSubtitle}
+                  messageIsDisabled={props?.messageIsDisabled}
                 />
-            </TouchableOpacity>
-            <View style={styles.boxOfListCenter}>
-                <If condition={!!props.textTitle}>
-                    <TouchableOpacity
-                        activeOpacity={0.5}
-                        >
-                        <Text
-                            style={styles.textNameChat(colorText)}
-                            numberOfLines={1}>
-                            {props.textTitle}
-                        </Text>
-                    </TouchableOpacity>
+                <If condition={props?.showStatusMessage}>
+                  <StatusSendMessage statusSendMessage={props?.statusSendMessage} />
                 </If>
-                <If condition={!!props.textSubtitle}>
-                    <TouchableOpacity
-                        style={styles.containerLastMessage}>
-                        <IconMessageType 
-                            type={props.typeMessage}
-                            colorIcon={colorText}
-                        />
-                        <TextMessageType 
-                            colorText={colorText}
-                            type={props.typeMessage}
-                            valueText={props.textSubtitle}
-                        />
-                    </TouchableOpacity>
-                </If>
-            </View>
-            <View style={styles.cardListChatEnd}>
-                <AnimatedTouchableOpacity 
-                    activeOpacity={0.7}
-                    onPress={() => onPressCard()}
-                    style={styles.buttonHourLastMessage(colorText)}>
-                    <HoursMessage 
-                        colorText={colorText}
-                        date={props?.hoursMessage}
-                    />
-                </AnimatedTouchableOpacity>
-            </View>
+              </TouchableOpacity>
+            </If>
+            <MessageTypeAction
+              actionChat={props?.actionChat}
+              colorText={colorText}
+            />
+          </View>
+          <View style={styles.cardListChatEnd}>
+            <AnimatedTouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => onPressCard()}
+              style={styles.buttonHourLastMessage(colorText)}>
+              <HoursMessage colorText={colorText} date={props?.hoursMessage} />
+            </AnimatedTouchableOpacity>
+          </View>
         </AnimatedTouchableOpacity>
-    </Animatable.View>;
+      </Animatable.View>
+      {/* </Swipeable>  */}
+    </>
+  );
 };
 
-export default CardListChat;
+export default memo(CardListChat);

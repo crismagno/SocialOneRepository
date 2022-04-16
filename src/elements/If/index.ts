@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { IIfProps } from "./types";
 
-const If: React.FC<IIfProps> = (props): JSX.Element | any => {
+export const If: React.FC<IIfProps> = (props): JSX.Element | any => {
     return props.condition && props.children || null;
 };
 

@@ -2,6 +2,7 @@ export const logos: string[] = [
     require("./../images/SocialLogo1.png"),
     require("./../images/SocialLogo2.png"),
     require("./../images/SocialLogo3.png"),
+    require("./../images/SocialLogo4.png"),
 ];
 
 export const backgrounds: string[] = [
@@ -18,9 +19,15 @@ export const wallpapers: string[] = [
     require("./../images/background4.jpg"),
     require("./../images/background5.jpg"),
     require("./../images/background6.png"),
+    require("./../images/background7.jpg"),
+    require("./../images/background8.jpeg"),
+    require("./../images/background9.jpg"),
 ];
 
 export const loads: string[] = [
+    require("./../images/load1.gif"),
+    require("./../images/load3.gif"),
+    require("./../images/load4.gif"),
     require("./../images/load1.gif"),
 ];
 

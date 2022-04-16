@@ -1,51 +1,42 @@
-import React, { useEffect,  useRef,  useState } from "react";
+import React, { memo, useEffect,  useRef,  useState } from "react";
 import { View, Text, Image, Animated, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import * as Animatable from "react-native-animatable";
 import { setSize } from "./../../helpers/responsive/Index";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ICardLlistPeopleProps } from "./types";
-import { colorImageIsLight } from "./../../helpers/global";
 import If from "./../../elements/If";
+import { getFileByPath } from "../../helpers/files";
+import { images } from "../../assets/general";
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
-const CardListPeople: React.FC<ICardLlistPeopleProps> = (props): JSX.Element => {
-
-    const [colorText, setColorText] = useState("#FFF");
-    const animationButtonRef = useRef(null);
+export const CardListPeople: React.FC<ICardLlistPeopleProps> = (props): JSX.Element => {
 
     useEffect(() => {
         if (props.animationInitial) {
-            const animation = animationButtonRef.current[`${props.animationInitial}`];
-            animation(props.animationDuration || 500);
+            animationButtonRef.current?.animate(props.animationInitial, props.animationDuration || 500);
         }
     }, []);
 
     useEffect(() => {
-        colorTextByImage();
-    }, [props.image]);
+        setAvatar(props?.avatar ? { uri: getFileByPath(props?.avatar) } : images.avatars[0])
+    }, [props?.avatar]);
 
-    // change color of text fo card by image color dominant
-    const colorTextByImage = async (): Promise<void> => {
-        const colorIsLight = await colorImageIsLight(props.image)
-        if (colorIsLight) {
-            setColorText("#313131");
-            return;
-        }
-        if (!colorIsLight) {
-            setColorText("#FFF");
-            return;
-        };
-    };
+    const colorText = props?.colorComponents;
+    const animationButtonRef = useRef(null);
+    const [avatar, setAvatar] = useState(props?.avatar ? { uri: getFileByPath(props?.avatar) } : images.avatars[0]);
 
-    const onPressCard = (): void => {
+    const onPressCard = async (): Promise<void> => {
         if (props.animationPress) {
-            const animation = animationButtonRef.current[`${props.animationPress}`];
-            animation(150);
+            await animationButtonRef.current?.animate(props.animationPress, 150)
         }
         props?.onPressCard();
-    }
+    };
+
+    const onErrorAvatar = (error: any): void => {
+        if (error) setAvatar(images.avatars[0]);
+    };
 
     return <Animatable.View
         ref={animationButtonRef}>
@@ -62,7 +53,8 @@ const CardListPeople: React.FC<ICardLlistPeopleProps> = (props): JSX.Element => 
             >     
                 <Image
                     style={styles.avatar}
-                    source={props.avatar}
+                    source={avatar}
+                    onError={onErrorAvatar}
                 />
                 <If condition={props.online !== undefined &&  props.online !== null}>
                     <Animatable.View
@@ -111,4 +103,4 @@ const CardListPeople: React.FC<ICardLlistPeopleProps> = (props): JSX.Element => 
     </Animatable.View>;
 };
 
-export default CardListPeople;
+export default memo(CardListPeople);

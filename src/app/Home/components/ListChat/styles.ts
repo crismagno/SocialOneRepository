@@ -10,9 +10,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: setSize(10),
         paddingVertical: setSize(7),
     },
-    containerListStyle: {
-        paddingBottom: setSize(58),
-    },
+    containerListStyle: (showSearch: boolean): any => ({
+        paddingBottom: setSize(showSearch ? 50 : 50),
+    }), 
+    viewButtonBottomLoadList: {
+        justifyContent: "center",
+        alignItems: "center"
+    }
 });
 
 export default styles;

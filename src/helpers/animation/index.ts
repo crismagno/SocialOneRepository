@@ -5,7 +5,7 @@ const effectAnimationResult = (
     inputRange: any[], 
     outputRange: any[]
 ): Animated.AnimatedInterpolation => {
-    return scroll.interpolate({
+    return scroll?.interpolate({
         inputRange, 
         outputRange,
         extrapolate: "clamp"

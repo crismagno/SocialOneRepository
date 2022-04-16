@@ -1,37 +1,20 @@
-import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, Snackbar } from 'react-native-paper';
+import React from 'react';
+import Snackbar from 'react-native-snackbar';
+import { colorsSocial } from '../../assets/general';
+import { ISnackBarSocialDefaultProps } from './types';
 
-const SnackBarSocial = (props) => {
-  const [visible, setVisible] = React.useState(false);
+export const SnackBarSocialDefault = (configs: ISnackBarSocialDefaultProps) => {
+  Snackbar.show({
+    text: configs.text,
+    textColor: configs.textColor,
+    duration: Snackbar[configs.duration || "LENGTH_LONG"],
+    action: {
+      text: configs.textAction || "UNDO",
+      textColor: configs.colorButton || colorsSocial.colorA1,
+      onPress: () => configs.onPress && configs.onPress(),
+    },
+    backgroundColor: configs.backgroundColor
+  });
+}
 
-  const onToggleSnackBar = () => setVisible(!visible);
-
-  const onDismissSnackBar = () => setVisible(false);
-
-  return (
-    <View style={styles.container}>
-      <Button onPress={onToggleSnackBar}>{visible ? 'Hide' : 'Show'}</Button>
-      <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        action={{
-          label: 'Undo',
-          onPress: () => {
-            // Do something
-          },
-        }}>
-        Hey there! I'm a Snackbar.
-      </Snackbar>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-});
-
-export default SnackBarSocial;
+export default SnackBarSocialDefault;

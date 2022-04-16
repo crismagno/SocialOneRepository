@@ -1,4 +1,5 @@
 export interface ILogoProps {
-    width?: number;
-    type?: 0 | 1;
+    width?: number; 
+    height?: number; 
+    type?: 0 | 1 | 2 | 3;
 };

@@ -1,9 +1,9 @@
 import { ViewStyle } from "react-native";
-import { TMessageType } from "../../types";
+import { IChatItem, IUser, IUser, TMessageType } from "../../types";
 
 export interface ICardLlistChatProps {
     style?: ViewStyle;
-    image: any; 
+    colorComponents: string; 
     avatar: string;
     textTitle: string;
     textSubtitle: string;
@@ -15,4 +15,10 @@ export interface ICardLlistChatProps {
     online?: boolean;
     typeMessage: TMessageType;
     hoursMessage?: String | Date;
+    onPressCard: () => void;
+    messageIsDisabled?: boolean;
+    actionChat: IChatItem['actionChat'];
+    statusSendMessage: boolean;
+    user: IUser;
+    showStatusMessage: boolean;
 }

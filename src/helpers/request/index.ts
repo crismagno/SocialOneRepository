@@ -12,10 +12,14 @@ export const requestApi = async (params: IRequestApi = {
         
     let headers = {
         "Content-type": "application/json",
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
     }
 
     if (params.authorization) {
-        headers["Authorization"] = `Bearer ${await StateRequestSocial.getTokenUser()}`;
+        const token = await StateRequestSocial.getTokenUser();
+        if (!token) throw  "Token not exist";
+        headers["Authorization"] = `Bearer ${token}`;
     }
 
     if (params.othersHeaders) {
@@ -38,7 +42,7 @@ export const requestApi = async (params: IRequestApi = {
         case "DELETE":
             return await axiosInstance.delete(params.route, params.body);
         default:
-            throw  "Method pass error";
+            throw "Method pass error";
     };
 };
 

@@ -2,7 +2,7 @@ import { ViewStyle } from "react-native";
 
 export interface ICardLlistPeopleProps {
     style?: ViewStyle;
-    image: any; 
+    colorComponents: string; 
     avatar: string;
     textTitle: string;
     textSubtitle: string;

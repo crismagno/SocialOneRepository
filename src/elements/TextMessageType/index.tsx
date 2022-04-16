@@ -1,18 +1,19 @@
-import React from "react";
+import React, { memo } from "react";
 import { Text } from "react-native";
 import styles from "./styles";
 import { ITextMessageTypeProps } from "./types";
 
-const TextMessageType: React.FC<ITextMessageTypeProps> = (props): JSX.Element => {
+export const TextMessageType: React.FC<ITextMessageTypeProps> = (props): JSX.Element => {
 
     const textByType = (): String => {
+        if (props?.messageIsDisabled) return "Message was removed"
         switch(props.type) {
             case "text": return props.valueText;
-            case "audio": return "Áudio";
+            case "audio": return "Audio";
             case "document": return "Documento";
             case "figure": return "Figura";
             case "image": return "Imagem";
-            case "video": return "Vídeo";
+            case "video": return "Video";
             case "microphone": return "Microfone";
             default: return "...";
         };
@@ -25,4 +26,4 @@ const TextMessageType: React.FC<ITextMessageTypeProps> = (props): JSX.Element =>
     </Text>; 
 };
 
-export default TextMessageType;
+export default memo(TextMessageType);

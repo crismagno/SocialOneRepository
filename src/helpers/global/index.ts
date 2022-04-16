@@ -11,6 +11,8 @@ export const errorHandling = (error: any): string => {
     let errorReturn: string = "";
     if (error?.response?.data?.message) {
         errorReturn = `${error?.response?.data?.message}`;
+    } else if (error?.response?.data) {
+        errorReturn = `${error?.response?.data}`;
     } else {
         errorReturn = "Error Social Network";
     }
@@ -47,6 +49,21 @@ export const colorImageIsLight = async (image: any): Promise<boolean> => {
     const hexByImage = await getColorDominantImage(image);
     const luminosityHexImage = luminosity(hexByImage);
     return luminosityHexImage > 200;
+};
+
+export const returnColorBasedOnLight = async (
+    image: any, 
+    colorToImageMoreLuminosity: string,
+    colorToImageLessLuminosity: string,
+): Promise<string> => {
+    const colorIsLight = await colorImageIsLight(image);
+    if (!colorIsLight) {
+        return colorToImageLessLuminosity;
+    };
+
+    if (colorIsLight) {
+        return colorToImageMoreLuminosity;
+    };
 };
 
 export default {

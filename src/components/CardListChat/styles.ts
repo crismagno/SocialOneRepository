@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         borderRadius: setSize(10),
         backgroundColor: "#FFF4",
         marginBottom: setSize(7),
-        padding: setSize(5)
+        padding: setSize(5),
     },
     containerImage: {
         position: "relative",
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         height: setSize(50),
     },
     viewOnline: (isOnline: boolean, borderColor: string): ViewStyle => {
-        const backgroundColor = isOnline ? "#00A800" : "gray";
+        const backgroundColor = isOnline ? "#65ec99" : "gray";
         return {
             position: "absolute",
             right: setSize(3),

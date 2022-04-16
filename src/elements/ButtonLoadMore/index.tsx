@@ -1,33 +1,29 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { memo } from 'react';
 import styles from './styles';
 import { IButtonLoadMoreProps } from './types';
 import ButtonGradient from '../ButtonGradient';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { setSize } from '../../helpers/responsive/Index';
 
-const ButtonLoadMore: React.FC<IButtonLoadMoreProps> = (props): JSX.Element => {
-  return <View style={{
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  }}>
-    <ButtonGradient
+export const ButtonLoadMore: React.FC<IButtonLoadMoreProps> = (props): JSX.Element => {
+  return <ButtonGradient
       style={styles.buttonGetMoreChatsByUser}
       load={props.load}
-      colors={["#0004", "#0004"]}
+      colors={["transparent", "transparent"]}
       onPress={props.onPress}
-      animationInitial={"fadeIn"}
+      animationInitial={"pulse"}
       animationClick={"pulse"}
       iconRight={
         <Ionicons
           name={"add-circle-outline"}
-          size={setSize(22)}
-          color={"#FFF"}
+          size={setSize(45)}
+          color={props?.colorComponents}
         />
       }
+      loadColor={props?.colorComponents}
+      sizeLoad={30}
+      typeLoad={1}
     />
-  </View>
 };
 
-export default ButtonLoadMore;
+export default memo(ButtonLoadMore);

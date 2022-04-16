@@ -1,77 +1,67 @@
-import React, { useEffect } from "react";
-import { View } from "react-native";
-import Logo from "../../elements/Logo";
-import styles from "./styles";
-import localStorage from "./../../infra/localStorage";
-import { IndexActionsStore } from "./../../reduxStore/actions";
-import { StateRequestSocial } from "../../helpers/request/StateRequestSocial";
-import actionsNavigation from "./../../navigation/actions";
-import { TRouteRedirect, TStepApp } from "../../types";
-import { user as userService } from "./../../services";
+import React, {useEffect, useCallback, useRef} from 'react';
+import {View} from 'react-native';
+import Logo from '../../elements/Logo';
+import styles from './styles';
+import localStorage from './../../infra/localStorage';
+import {IndexActionsStore} from './../../reduxStore';
+import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
+import actionsNavigation from './../../navigation/actions';
+import {TRouteRedirect, TStepApp} from '../../types';
+import * as Animatable from 'react-native-animatable';
 
 const SplashInit: React.FC = (props): JSX.Element => {
+  useEffect(() => {
+    animationInitial();
+  }, []);
 
-    const {
-       actionsUser 
-    } = IndexActionsStore();
+  const {actionsUser} = IndexActionsStore();
+  const animatableRef = useRef<Animatable.View & View>(null);
+  // actions navigation witch reset routes
+  const execActionsNavigation = actionsNavigation(props);
 
-    // actions navigation witch reset routes
-    const execActionsNavigation = actionsNavigation(props);
-    
-    useEffect(() => {
-        setTimeout(() => {
-            verifySessionUser();
-        }, 2000);
-    }, []);
-    
-    const goToRoute = (route: TRouteRedirect): void => {
-        execActionsNavigation.resetHistory(route);
-    };
+  const goToRoute = useCallback((route: TRouteRedirect): void => {
+    execActionsNavigation.resetHistory(route);
+  }, []);
 
-    const verifySessionUser = async (): Promise<void> => {
+  const animationInitial = async (): Promise<void> => {
+    await animatableRef.current?.animate('slideInUp', 1000);
+    const responseVerifySession = await verifySessionUser();
+    await animatableRef.current?.animate('slideOutUp', 1000);
+    goToRoute(responseVerifySession);
+  };
 
-        /* verify if user is localStorage Session 
-        * if user is session, make request to validate user exists on database
-        * else user not redirect to signIn
-        * if user exists on database verify "step fo localStorage Session"
-        */
-        const userLocalStorage = await localStorage.getUser();
-        if (!!userLocalStorage) {
-            
-            // fazer requisição e se usuario não existir jogar pra tela de login
-            StateRequestSocial.setTokenState(userLocalStorage.token); // insert in class de StateRequest
+  const verifySessionUser = async (): Promise<TRouteRedirect> => {
+    /* verify if user is localStorage Session
+     * if user is session, make request to validate user exists on database
+     * else user not redirect to signIn
+     * if user exists on database verify "step fo localStorage Session"
+     */
+    const userLocalStorage = await localStorage.getUser();
+    if (!!userLocalStorage) {
+      StateRequestSocial.setTokenState(userLocalStorage.token); // insert in class de StateRequest
+      actionsUser.setUser(userLocalStorage); // insert on user store redux
 
-            actionsUser.setUserOnState(userLocalStorage); // insert on user store redux
-             
-            // userService
-            //     .getUserById(userLocalStorage._id)
-            //     .then(user => {
-            //         actionsUser.setUserOnState(user);            
-            //     }); 
+      const stepLocalStorage: TStepApp = await localStorage.getStep();
 
-            const stepLocalStorage: TStepApp = await localStorage.getStep(); 
+      if (stepLocalStorage === 'VerifyCode') {
+        return 'VerifyCode';
+      }
 
-            if (stepLocalStorage === "VerifyCode") {
-                goToRoute("VerifyCode");
-                return;    
-            }
+      if (stepLocalStorage === 'App') {
+        return 'App';
+      }
+    }
 
-            if (stepLocalStorage === "App") {
-                goToRoute("App");
-                return;    
-            }
+    return 'SignIn';
+  };
 
-            goToRoute("SignIn");
-            return;
-        }
-        
-        goToRoute("SignIn");
-        return;
-    };
-
-    return <View style={styles.container}>
-        <Logo/>
-    </View>;
+  return (
+    <View style={styles.container}>
+      <Animatable.View ref={animatableRef}>
+        <Logo type={3} width={120} height={140} />
+      </Animatable.View>
+    </View>
+  );
 };
 
 export default SplashInit;

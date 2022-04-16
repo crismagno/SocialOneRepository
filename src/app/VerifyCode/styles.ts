@@ -27,18 +27,17 @@ const styles = StyleSheet.create({
     },
     viewInputsCode: {
         flexDirection: "row",
+        marginTop: setSize(10)
     },
     inputCode: {
-        width: setSize(50),
+        width: setSize(45),
         height: setSize(70),
-        borderWidth: setSize(3),
-        marginHorizontal: setSize(5),
-        borderRadius: setSize(15),
+        marginHorizontal: setSize(8),
         textAlign: "center",
-        fontSize: setSize(27),
-        borderColor: colorsSocial.colorA4,
+        fontSize: setSize(22),
         color: colorsSocial.colorA3,
-        fontWeight: "bold"
+        fontWeight: "bold",
+
     },
     imageTop: { 
         position: "absolute",

@@ -9,7 +9,7 @@ const SignInTop: React.FC = (props): JSX.Element => {
         <Animatable.View 
             animation={"fadeIn"}
             duration={1000}>
-            <Logo />
+            <Logo type={3} width={120} height={140} />
         </Animatable.View>
     </View>
 };

@@ -9,10 +9,14 @@ const styles = StyleSheet.create({
     },
     containerList: {
         paddingHorizontal: setSize(10),
-        paddingVertical: setSize(7)
+        paddingVertical: setSize(7),
     },
     containerListStyle: {
-        paddingBottom: setSize(8),
+        paddingBottom: setSize(50),
+    },
+    viewButtonBottomLoadList: {
+        justifyContent: "center",
+        alignItems: "center"
     }
 });
 

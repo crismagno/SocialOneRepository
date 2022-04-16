@@ -28,6 +28,14 @@ target 'SocialOne' do
 
   pod 'react-native-blur', :path => '../node_modules/@react-native-community/blur'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
+  pod 'RNSnackbar', :path => '../node_modules/react-native-snackbar'
+
+  pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
+
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'SocialOneTests' do
     inherit! :complete
     # Pods for testing

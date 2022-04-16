@@ -8,7 +8,7 @@ export const ToastSocial = (params: IToastSocial): void => {
     const colorsToast = {
         success: "green",
         danger: "red",
-        warning: "yellow",
+        warning: "orange",
         info: "blue",
     };
 
@@ -19,6 +19,8 @@ export const ToastSocial = (params: IToastSocial): void => {
             borderRadius: setSize(5),
             height: setSize(50),
             width: setSize(300),
+            maxHeight: setSize(500),
+            maxWidth: setSize(400),
         },
         textStyle: {
             color: colorsSocial.colorA1,

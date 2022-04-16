@@ -5,4 +5,5 @@ export interface ISignUpCenterProps {
     setUser: (user: IUserCreate) => void;
     inputsError: IUserCreate;
     setInputsError: (user) => void;
+    onSubmit: () => void;
 };

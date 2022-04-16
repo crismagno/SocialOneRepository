@@ -38,6 +38,38 @@ export const removeUser = async (): Promise<boolean> => {
     }
 };
 
+export const updatePropertyUser = async (property: keyof IUser, newValue: string): Promise<IUser|null> => {
+    try {
+        const userStorage: string = await AsyncStorage.getItem(variablesLocalStorage.USER);
+        
+        // valid if user exists
+        if (userStorage && userStorage.trim()) {
+            const userStorageObject: IUser = JSON.parse(userStorage);
+
+            // valid property was passed
+            if (!property) {
+                console.log("Property not exists!!!")
+                return userStorageObject;
+            }
+
+            // update property user
+            const userStorageUpdated = {
+                ...userStorageObject,
+                [`${property}`]: newValue
+            };
+
+            // transform user updated to it will be saved os storage
+            const userFormatted: string = JSON.stringify(userStorageUpdated);
+            await AsyncStorage.setItem(variablesLocalStorage.USER, userFormatted);
+
+            return userStorageUpdated;
+        }
+        return null;
+    } catch (error) {
+        return null;
+    };
+};
+
 // ========= STEP APPLICATION=========
 export const setStep = async (step: TStepApp): Promise<boolean> => {
 
@@ -79,4 +111,5 @@ export default {
     getStep,
     setStep,
     removeStep,
+    updatePropertyUser
 };

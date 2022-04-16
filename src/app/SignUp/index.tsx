@@ -6,13 +6,19 @@ import { errorHandling, validateEmail } from "../../helpers/global";
 import { IUser, IUserCreate } from "../../types";
 import { user as userService } from "./../../services/index";
 import localStorage from "./../../infra/localStorage";
-import { IndexActionsStore } from "./../../reduxStore/actions";
+import { IndexActionsStore } from "./../../reduxStore";
 import { StateRequestSocial } from "../../helpers/request/StateRequestSocial";
 import SignUpTop from "./components/Top";
 import SignUpCenter from "./components/Center";
 import SignUpBottom from "./components/Bottom";
+import { colorsSocial } from "../../assets/general";
+import { SnackBarSocialDefault } from "../../elements";
 
-const SignUp: React.FC = (props): JSX.Element  => {
+const SignUp: React.FC<any> = (props): JSX.Element  => {
+
+    useEffect(() => {
+        componentWillMount();
+    }, []);
 
     const {
         actionsUser 
@@ -24,7 +30,7 @@ const SignUp: React.FC = (props): JSX.Element  => {
         phone: "",
         password: "",
     });
-    const [inputsError, setInputsError] = useState({
+    const [inputsError, setInputsError] = useState<IUserCreate>({
         fullName: "",
         email: "",
         phone: "",
@@ -32,11 +38,7 @@ const SignUp: React.FC = (props): JSX.Element  => {
     });
     const [load, setLoad] = useState<boolean>(false);
 
-    useEffect(() => {
-        componentDidMount();
-    }, []);
-
-    const componentDidMount = async (): Promise<void> => {
+    const componentWillMount = async (): Promise<void> => {
         await localStorage.removeUser();
         await localStorage.removeStep();
     };
@@ -69,7 +71,12 @@ const SignUp: React.FC = (props): JSX.Element  => {
         };
 
         if (numInputsInvalid > 0) {
-            ToastSocial({ message: "Fill in the required fields", type: "danger" });
+            SnackBarSocialDefault({
+                text:"Fill in the required fields",
+                duration: "LENGTH_LONG",
+                textColor: colorsSocial.colorA3,
+                colorButton: colorsSocial.colorA3
+            });
             return true;
         }
 
@@ -96,17 +103,26 @@ const SignUp: React.FC = (props): JSX.Element  => {
             setLoad(true);
             
             const userResponse: IUser = await userService.signUp(user);
-            actionsUser.setUserOnState(userResponse);
+            actionsUser.setUser(userResponse);
             clearUser();
             
-            localStorage.setUser(userResponse);
-            localStorage.setStep("VerifyCode");
+            await localStorage.setUser(userResponse);
+            await localStorage.setStep("VerifyCode");
             StateRequestSocial.setTokenState(userResponse.token);
-            
-            ToastSocial({ message: "Created Success" });
+            SnackBarSocialDefault({
+                text: "Created!",
+                duration: "LENGTH_SHORT",
+                textColor: colorsSocial.colorA4,
+                colorButton: colorsSocial.colorA4
+            });
             goToRoute("VerifyCode");
         } catch (error) {
-            ToastSocial({ message: errorHandling(error), type: "danger" });
+            SnackBarSocialDefault({
+                text: errorHandling(error),
+                duration: "LENGTH_LONG",
+                textColor: colorsSocial.colorA3,
+                colorButton: colorsSocial.colorA3
+            });
         } finally {
             setLoad(false);
         };
@@ -119,6 +135,7 @@ const SignUp: React.FC = (props): JSX.Element  => {
             setUser={setUser}
             inputsError={inputsError}
             setInputsError={setInputsError}
+            onSubmit={() => createUser()}
         />
         <SignUpBottom 
             load={load}

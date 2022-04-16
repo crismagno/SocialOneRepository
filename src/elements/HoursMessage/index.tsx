@@ -1,11 +1,17 @@
-import React from "react";
+import React, { memo } from "react";
 import { Text } from "react-native";
 import styles from "./styles";
 import { IHoursMessageProps } from "./types";
 import moment from "moment";
-import "moment/locale/en-in";
+import { useEffect } from "react";
+// import "moment/locale/en-in";
+// import "moment/locale/pt-br";
+import "moment/min/moment-with-locales.min.js"
 
-const HoursMessage: React.FC<IHoursMessageProps> = (props): JSX.Element => {
+export const HoursMessage: React.FC<IHoursMessageProps> = (props): JSX.Element => {
+    useEffect(() => {
+        moment.locale('en-in');
+    }, []);
 
     const hoursDisplay = (): String => {
         if (!props.date) return "...";
@@ -16,7 +22,7 @@ const HoursMessage: React.FC<IHoursMessageProps> = (props): JSX.Element => {
             return moment(props.date).format('LT');
 
         if (diffOfDateMessageForToday === 1)
-            return "ontem";
+            return "yesterday";
 
         if (diffOfDateMessageForToday > 1 && diffOfDateMessageForToday <= 6)
             return moment(props.date).format('dddd');
@@ -32,4 +38,4 @@ const HoursMessage: React.FC<IHoursMessageProps> = (props): JSX.Element => {
     </Text>;
 };
 
-export default HoursMessage;
+export default memo(HoursMessage);

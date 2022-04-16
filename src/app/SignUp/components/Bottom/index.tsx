@@ -14,6 +14,7 @@ const SignUpBottom: React.FC<ISignUpBottomProps> = (props): JSX.Element  => {
             onPress={props.createUser}
             animationInitial={"fadeIn"}
             animationClick={"pulse"}
+            typeLoad={1}
         />
         <Button
             style={styles.buttonSignIn} 
