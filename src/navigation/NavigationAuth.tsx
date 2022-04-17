@@ -1,7 +1,9 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-// routes
+/**
+ *  Routes
+ */
 import SplashInit from '../app/SplashInit';
 import SignIn from '../app/SignIn';
 import SignUp from '../app/SignUp';
