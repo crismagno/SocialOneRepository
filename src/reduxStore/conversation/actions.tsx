@@ -24,14 +24,14 @@ import {
   IInsertNewMessageOnMessages,
   INSERT_NEW_MESSAGE_ON_MESSAGES,
   UPDATE_MESSAGES_CHAT_ATUAL,
-  IUpdateMessagesChatAtual
+  IUpdateMessagesChatAtual,
 } from './types';
 import {ICombineReducers} from '../types';
-import { IMessageProps } from '../../app/Conversation/components/Center/components/Message/types';
-import { IChatSchema } from '../../services/chat/types';
-import { IMessageSchema } from '../../services/message/types';
-import { ISetIdUserOnSeenMessages, IUser } from '../../types';
-import { Socket } from 'socket.io-client';
+import {IMessageProps} from '../../app/Conversation/components/Center/components/Message/types';
+import {IChatSchema} from '../../services/chat/types';
+import {IMessageSchema} from '../../services/message/types';
+import {ISetIdUserOnSeenMessages, IUser} from '../../types';
+import {Socket} from 'socket.io-client';
 
 const Actions = (): IConversationActionsStore => {
   const dispatch = useDispatch();
@@ -53,17 +53,20 @@ const Actions = (): IConversationActionsStore => {
       type: SET_TEXT_CONVERSATION,
       payload: {
         chatId,
-        text
+        text,
       },
     });
   };
 
-  const setMessagesConversation = (chatId: string, messages: IMessageProps[]): void => {
+  const setMessagesConversation = (
+    chatId: string,
+    messages: IMessageProps[],
+  ): void => {
     dispatch<ISetMessagesConversationAction>({
       type: SET_MESSAGES_CONVERSATION,
       payload: {
         chatId,
-        messages
+        messages,
       },
     });
   };
@@ -72,41 +75,47 @@ const Actions = (): IConversationActionsStore => {
     dispatch<ISetUserChatConversationAction>({
       type: SET_USER_CHAT_CONVERSATION,
       payload: {
-        userChat
+        userChat,
       },
     });
   };
 
-  const updatePropertyUserChatConversation = (property: keyof IUserChat, newValue: any, userId?: string): void => {
+  const updatePropertyUserChatConversation = (
+    property: keyof IUserChat,
+    newValue: any,
+    userId?: string,
+  ): void => {
     dispatch<IUpdatePropertyUserChatConversationAction>({
       type: UPDATE_PROPERTY_USER_CHAT_CONVERSATION,
       payload: {
         property,
         newValue,
-        userId
+        userId,
       },
     });
   };
 
   const setMessagesSelected = (eventMessages: string[] | any): void => {
     let messages = eventMessages;
-    if (typeof eventMessages === "function") {
+    if (typeof eventMessages === 'function') {
       messages = eventMessages(state?.messagesSelected);
-    };
+    }
 
     dispatch<ISetMessagesSelectedConversationAction>({
       type: SET_MESSAGES_SELECTED,
       payload: {
-        messages
+        messages,
       },
     });
   };
-  
-  const setMessages = (eventOrMessages: IMessageProps[] | IMessageSchema[] | any): void => {
+
+  const setMessages = (
+    eventOrMessages: IMessageProps[] | IMessageSchema[] | any,
+  ): void => {
     dispatch<ISetMessagesAtualConversationAction>({
       type: SET_MESSAGES_ATUAL_CONVERSATION,
       payload: {
-        messages: eventOrMessages
+        messages: eventOrMessages,
       },
     });
   };
@@ -115,19 +124,27 @@ const Actions = (): IConversationActionsStore => {
     dispatch<ISetChatDataConversationAction>({
       type: SET_CHAT_DATA,
       payload: {
-        chatData
+        chatData,
       },
     });
   };
 
-  const putUserOnSeenMessagesByChatAtual = (data: ISetIdUserOnSeenMessages): void => {
+  const putUserOnSeenMessagesByChatAtual = (
+    data: ISetIdUserOnSeenMessages,
+  ): void => {
     dispatch<IPutUserOnSeenMessagesByChatAtual>({
       type: PUT_USER_ON_SEEN_MESSAGES_BY_CHAT_ATUAL,
       payload: data,
     });
   };
 
-  const insertNewMessageOnMessages = (user: IUser, globalSocket: Socket, userId: string, chatId: string, messageCreated: IMessageSchema): void => {
+  const insertNewMessageOnMessages = (
+    user: IUser,
+    globalSocket: Socket,
+    userId: string,
+    chatId: string,
+    messageCreated: IMessageSchema,
+  ): void => {
     dispatch<IInsertNewMessageOnMessages>({
       type: INSERT_NEW_MESSAGE_ON_MESSAGES,
       payload: {
@@ -135,19 +152,24 @@ const Actions = (): IConversationActionsStore => {
         globalSocket,
         userId,
         chatId,
-        messageCreated
+        messageCreated,
       },
     });
   };
 
-  const updateMessagesChatAtual = (user: IUser, userId: string, chatId: string, messages: IMessageSchema[]): void => {
+  const updateMessagesChatAtual = (
+    user: IUser,
+    userId: string,
+    chatId: string,
+    messages: IMessageSchema[],
+  ): void => {
     dispatch<IUpdateMessagesChatAtual>({
       type: UPDATE_MESSAGES_CHAT_ATUAL,
       payload: {
         user,
         userId,
         chatId,
-        messages
+        messages,
       },
     });
   };
@@ -164,7 +186,7 @@ const Actions = (): IConversationActionsStore => {
     setChatDataConversation,
     putUserOnSeenMessagesByChatAtual,
     insertNewMessageOnMessages,
-    updateMessagesChatAtual
+    updateMessagesChatAtual,
   };
 };
 

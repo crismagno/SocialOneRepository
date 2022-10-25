@@ -2,6 +2,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {IUser, TStepApp} from '../../types';
 import variablesLocalStorage from './variables';
 
+/**
+ * Note: change functions to class and methods class
+ */
+
 // ================= USER SESSION ========================
 export const setUser = async (user: IUser): Promise<boolean> => {
   if (!user) return false;
