@@ -1,5 +1,5 @@
-import { IProfileInitialState } from "./types";
+import {IProfileInitialState} from './types';
 
 export const initialState: IProfileInitialState = {
-    valuesDragAvatar: null,
+  valuesDragAvatar: null,
 };

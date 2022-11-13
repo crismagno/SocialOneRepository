@@ -1,5 +1,5 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {ImageBackground, Animated, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Animated, View} from 'react-native';
 import styles from './styles';
 import {colorsSocial, images} from './../../../../assets/general';
 import CardListChat from '../../../../components/CardListChat';
@@ -13,26 +13,23 @@ import {chat as chatService} from './../../../../services';
 import NoneData from '../../../../components/NoneData';
 import ButtonLoadMore from '../../../../elements/ButtonLoadMore';
 import Search from '../../../../components/Search';
-import ButtonIcon from '../../../../elements/ButtonIcon';
-import {ToastSocial} from './../../../../elements/ToastSocial';
-import Draggable from 'react-native-draggable';
-import { returnColorBasedOnLight } from '../../../../helpers/global';
+import {
+  errorHandling,
+  returnColorBasedOnLight,
+} from '../../../../helpers/global';
 import ViewGradient from '../../../../elements/ViewGradient';
-import { handleScrollEvent } from '../../../../helpers/scroll';
+import {handleScrollEvent} from '../../../../helpers/scroll';
+import SnackBarSocialDefault from '../../../../elements/SnackBarSocial';
 
 const ListChat: React.FC<any> = (props): JSX.Element => {
   const {actionsChat, actionsUser} = IndexActionsStore();
 
   // dados dos chat ordenados por data da ultima mensagem
-  const data: IChatItem[] = actionsChat
-    ?.state
-    ?.chats
-    ?.sort((a: any, b: any) => 
-      (new Date(b?.lastMessage?.createdAt) - new Date(a?.lastMessage?.createdAt))
-    );
-    
-  const imageWallpaper =
-    actionsUser?.state?.background?.home ?? images?.wallpapers[1];
+  const data: IChatItem[] = actionsChat?.state?.chats?.sort(
+    (a: any, b: any) =>
+      new Date(b?.lastMessage?.createdAt) - new Date(a?.lastMessage?.createdAt),
+  );
+
   const [load, setLoad] = useState(false);
   const [loadMoreChats, setLoadMoreChats] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -41,19 +38,12 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
   const heightCard = setSize(77);
   const limitSearch = 10;
   const user = actionsUser?.state;
-  const [colorComponents, setColorComponents] = useState(colorsSocial.colorA1); // cor principal dos componentes filhos
-  const [colorIcon, setColorIcon] = useState(colorsSocial.colorA10); // color icone de mostrar search
+  const colorComponents: string = colorsSocial.colorA1;
 
   // metodos de criacao do componente
   useEffect(() => {
     getChatsByUser();
   }, []);
-
-  // executar evento quando imageWallpaper mudar
-  // useEffect(() => {
-  //   colorTextByImage();
-  // }, [imageWallpaper]);
-  //----------------------------------
 
   const getChatsByUser = async (): Promise<void> => {
     try {
@@ -70,9 +60,9 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13
+        colorButton: colorsSocial.colorA13,
       });
     } finally {
       setLoad(false);
@@ -94,9 +84,9 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13
+        colorButton: colorsSocial.colorA13,
       });
     } finally {
       setLoadMoreChats(false);
@@ -117,9 +107,9 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13
+        colorButton: colorsSocial.colorA13,
       });
     } finally {
       setLoadMoreChats(false);
@@ -134,15 +124,8 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
   };
 
   // buscar chats quando tocar no topo do scroll
-  const handleScroll = (event): void => handleScrollEvent(event, getMoreChatsByUser);
-
-   // change color of text fo card by image color dominant
-   const colorTextByImage = async (): Promise<void> => {
-    const color = await returnColorBasedOnLight(imageWallpaper, '#313131', '#FFF');
-    const color2 = await returnColorBasedOnLight(imageWallpaper, "#31313124", "#FFF5");
-    setColorComponents(color);
-    setColorIcon(color2);
-  };
+  const handleScroll = (event): void =>
+    handleScrollEvent(event, getMoreChatsByUser);
 
   const renderItem = ({item, index}: RenderItem<IChatItem>): JSX.Element => {
     // validar usuário sem ser o que solicitou
@@ -152,13 +135,15 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
 
     const userChatNotMeValidate: IPeopleItem =
       (userChatNotMe && userChatNotMe?.length) > 0 ? userChatNotMe[0] : null;
-    
+
     const messageIsDisabledToMe =
       item?.lastMessage?.removeToUsers?.indexOf(user?._id) > -1;
-    
-      // status do envio da mensagem se visto pelos outros usuarios
-    const statusSendMessage = item?.lastMessage?.seenUsers?.length === item?.users?.length;
-    const wasThisUserThatSendLastMessage = item?.lastMessage?.userSent === user?._id;
+
+    // status do envio da mensagem se visto pelos outros usuarios
+    const statusSendMessage =
+      item?.lastMessage?.seenUsers?.length === item?.users?.length;
+    const wasThisUserThatSendLastMessage =
+      item?.lastMessage?.userSent === user?._id;
 
     // parte da animacao do componente
     const inputRange = [index * heightCard, (index + 2) * heightCard];
@@ -173,7 +158,7 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
         user={user}
         colorComponents={colorComponents}
         avatar={
-        userChatNotMeValidate ? userChatNotMeValidate?.avatar : user?.avatar
+          userChatNotMeValidate ? userChatNotMeValidate?.avatar : user?.avatar
         }
         textTitle={
           (userChatNotMeValidate && userChatNotMeValidate?.fullName) ||
@@ -208,21 +193,13 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
             {
               translateX: effectAnimationResult(
                 scrollY,
-                [0, 80, 100], 
-                [0, 20, 50]
+                [0, 80, 100],
+                [0, 20, 50],
               ),
-            }
+            },
           ],
-          height: effectAnimationResult(
-            scrollY,
-            [0, 30, 120], 
-            [50, 40, 0]
-          ),
-          opacity: effectAnimationResult(
-            scrollY,
-            [1, 30, 40], 
-            [1, 1, 0]
-          ),
+          height: effectAnimationResult(scrollY, [0, 30, 120], [50, 40, 0]),
+          opacity: effectAnimationResult(scrollY, [1, 30, 40], [1, 1, 0]),
         }}
         show={true}
         value={actionsChat?.state?.searchValue}
@@ -236,7 +213,10 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
             ref={flatListRef}
             style={styles.containerList}
             contentContainerStyle={styles.containerListStyle(showSearch)}
-            data={data.map((el: IChatItem, index: number) => ({ ...el, key: `chats-${index}` }))}
+            data={data.map((el: IChatItem, index: number) => ({
+              ...el,
+              key: `chats-${index}`,
+            }))}
             keyExtractor={(item) => item.key}
             renderItem={renderItem}
             horizontal={false}
@@ -244,8 +224,8 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {
-                useNativeDriver: false, 
-                listener: handleScroll
+                useNativeDriver: false,
+                listener: handleScroll,
               },
             )}
             scrollEventThrottle={32}

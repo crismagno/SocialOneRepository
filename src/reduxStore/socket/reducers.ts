@@ -2,7 +2,7 @@ import {CONNECT_SOCKET, DISCONNECT_SOCKET, IActionReducer} from './types';
 import {ISocketInitialState} from './types';
 import io from 'socket.io-client';
 import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
-import { initialState } from './initialState';
+import {initialState} from './initialState';
 
 export const socket = (
   state: ISocketInitialState = initialState,
@@ -20,7 +20,7 @@ export const socket = (
           reconnectionDelay: 1000,
           reconnectionDelayMax: 10000,
           reconnection: true,
-          multiplex: false
+          multiplex: false,
         }),
       };
     case DISCONNECT_SOCKET:
@@ -30,7 +30,7 @@ export const socket = (
       };
     default:
       return state;
-  };
+  }
 };
 
 export default socket;

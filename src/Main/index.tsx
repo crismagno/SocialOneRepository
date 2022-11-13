@@ -1,5 +1,5 @@
 import React from 'react';
-import App from '../navigation/Index';
+import NavigationIndex from '../navigation/Index';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {Provider} from 'react-redux';
 import store from '../reduxStore/store';
@@ -9,7 +9,7 @@ const Main: React.FC = (): JSX.Element => {
   return (
     <PaperProvider theme={theme}>
       <Provider store={store}>
-        <App />
+        <NavigationIndex />
       </Provider>
     </PaperProvider>
   );

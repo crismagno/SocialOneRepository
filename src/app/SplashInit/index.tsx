@@ -19,9 +19,9 @@ const SplashInit: React.FC = (props): JSX.Element => {
   // actions navigation witch reset routes
   const execActionsNavigation = actionsNavigation(props);
 
-  const goToRoute = useCallback((route: TRouteRedirect): void => {
+  const goToRoute = (route: TRouteRedirect): void => {
     execActionsNavigation.resetHistory(route);
-  }, []);
+  };
 
   const animationInitial = async (): Promise<void> => {
     await animatableRef.current?.animate('slideInUp', 1000);
