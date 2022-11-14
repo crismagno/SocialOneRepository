@@ -1,4 +1,5 @@
 import {IMessageSchema} from './services/message/types';
+import UserEnum from './shared/user/user.enum';
 
 export type TMessageType =
   | 'text'
@@ -23,6 +24,7 @@ export interface IUser {
     home: String;
     people: String;
   };
+  role: UserEnum.Roles;
 }
 
 export interface IUserCreate {

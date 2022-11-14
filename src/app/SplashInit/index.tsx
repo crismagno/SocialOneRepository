@@ -6,8 +6,9 @@ import localStorage from './../../infra/localStorage';
 import {IndexActionsStore} from './../../reduxStore';
 import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
 import actionsNavigation from './../../navigation/actions';
-import {TRouteRedirect, TStepApp} from '../../types';
+import {IUser, TRouteRedirect, TStepApp} from '../../types';
 import * as Animatable from 'react-native-animatable';
+import UserEnum from '../../shared/user/user.enum';
 
 const SplashInit: React.FC = (props): JSX.Element => {
   useEffect(() => {
@@ -36,19 +37,23 @@ const SplashInit: React.FC = (props): JSX.Element => {
      * else user not redirect to signIn
      * if user exists on database verify "step fo localStorage Session"
      */
-    const userLocalStorage = await localStorage.getUser();
-    if (!!userLocalStorage) {
+    const userLocalStorage: IUser = await localStorage.getUser();
+    if (userLocalStorage) {
       StateRequestSocial.setTokenState(userLocalStorage.token); // insert in class de StateRequest
+
       actionsUser.setUser(userLocalStorage); // insert on user store redux
 
       const stepLocalStorage: TStepApp = await localStorage.getStep();
 
-      if (stepLocalStorage === 'VerifyCode') {
-        return 'VerifyCode';
+      if (
+        userLocalStorage.role === UserEnum.Roles.MASTER ||
+        stepLocalStorage === 'App'
+      ) {
+        return 'App';
       }
 
-      if (stepLocalStorage === 'App') {
-        return 'App';
+      if (stepLocalStorage === 'VerifyCode') {
+        return 'VerifyCode';
       }
     }
 
