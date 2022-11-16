@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Animated, View} from 'react-native';
 import styles from './styles';
-import {colorsSocial, images} from './../../../../assets/general';
+import {colorsSocial} from './../../../../assets/general';
 import CardListChat from '../../../../components/CardListChat';
 import {IChatItem, IPeopleItem, RenderItem} from './../../../../types';
 import {effectAnimationResult} from './../../../../helpers/animation/index';
@@ -13,31 +13,36 @@ import {chat as chatService} from './../../../../services';
 import NoneData from '../../../../components/NoneData';
 import ButtonLoadMore from '../../../../elements/ButtonLoadMore';
 import Search from '../../../../components/Search';
-import {
-  errorHandling,
-  returnColorBasedOnLight,
-} from '../../../../helpers/global';
+import {errorHandling} from '../../../../helpers/global';
 import ViewGradient from '../../../../elements/ViewGradient';
 import {handleScrollEvent} from '../../../../helpers/scroll';
 import SnackBarSocialDefault from '../../../../elements/SnackBarSocial';
+import {IUserInitialState} from '../../../../reduxStore/user/types';
 
 const ListChat: React.FC<any> = (props): JSX.Element => {
   const {actionsChat, actionsUser} = IndexActionsStore();
 
-  // dados dos chat ordenados por data da ultima mensagem
   const data: IChatItem[] = actionsChat?.state?.chats?.sort(
     (a: any, b: any) =>
       new Date(b?.lastMessage?.createdAt) - new Date(a?.lastMessage?.createdAt),
   );
 
-  const [load, setLoad] = useState(false);
-  const [loadMoreChats, setLoadMoreChats] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [load, setLoad] = useState<boolean>(false);
+
+  const [loadMoreChats, setLoadMoreChats] = useState<boolean>(false);
+
+  const [showSearch, setShowSearch] = useState<boolean>(false);
+
   const scrollY: Animated.Value = useRef(new Animated.Value(0)).current;
+
   const flatListRef: React.MutableRefObject<null> = useRef(null);
-  const heightCard = setSize(77);
-  const limitSearch = 10;
-  const user = actionsUser?.state;
+
+  const heightCard: number = setSize(77);
+
+  const limitSearch: number = 10;
+
+  const user: IUserInitialState = actionsUser?.state;
+
   const colorComponents: string = colorsSocial.colorA1;
 
   // metodos de criacao do componente
@@ -123,10 +128,6 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
     });
   };
 
-  // buscar chats quando tocar no topo do scroll
-  const handleScroll = (event): void =>
-    handleScrollEvent(event, getMoreChatsByUser);
-
   const renderItem = ({item, index}: RenderItem<IChatItem>): JSX.Element => {
     // validar usuário sem ser o que solicitou
     const userChatNotMe: IPeopleItem[] = item?.users?.filter(
@@ -184,6 +185,11 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
     );
   };
 
+  const dataSource = data.map((item: IChatItem, index: number) => ({
+    ...item,
+    key: `chats-${index}`,
+  }));
+
   return (
     <ViewGradient style={styles.imageBackground}>
       <Loading show={load} />
@@ -213,11 +219,8 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
             ref={flatListRef}
             style={styles.containerList}
             contentContainerStyle={styles.containerListStyle(showSearch)}
-            data={data.map((el: IChatItem, index: number) => ({
-              ...el,
-              key: `chats-${index}`,
-            }))}
-            keyExtractor={(item) => item.key}
+            data={dataSource}
+            keyExtractor={({key}) => key}
             renderItem={renderItem}
             horizontal={false}
             showsVerticalScrollIndicator={false}
@@ -225,7 +228,8 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {
                 useNativeDriver: false,
-                listener: handleScroll,
+                listener: (event: any) =>
+                  handleScrollEvent(event, getMoreChatsByUser),
               },
             )}
             scrollEventThrottle={32}
@@ -258,7 +262,7 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
         minY={setSize(10)}>
         <ButtonIcon
           show={!load}
-          colorComponents={colorIcon}
+          colorComponents={'#000'}
           colorIcon={colorComponents}
           nameIcon={'search'}
           onPress={() => setShowSearch(!showSearch)}

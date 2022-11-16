@@ -26,6 +26,7 @@ const NavigationIndex: React.FC = (): JSX.Element => {
      * Start Socket
      */
     actionsSocket.connectSocket();
+
     return () => {
       globalSocket?.off(`connect`);
       globalSocket?.off(`disconnect`);

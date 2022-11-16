@@ -1,28 +1,20 @@
-/**
- * In this file events, references actions that use navigaton
- */
 import {CommonActions} from '@react-navigation/native';
 import {TRouteRedirect} from '../types';
 
-const actionsNavigation = (props: any) => {
-  // reset history and redirect to route passed with param
-  const resetHistory = (routeRedirect: TRouteRedirect): void | false => {
-    let navigation = props && props.navigation;
+export const resetHistory = (
+  props: any,
+  routeRedirect: TRouteRedirect,
+): void => {
+  const navigation = props?.navigation;
 
-    if (!navigation) {
-      return false;
-    }
+  if (!navigation) {
+    return;
+  }
 
-    let reset = CommonActions.reset({
-      index: 0,
-      routes: [{name: routeRedirect}],
-    });
-    navigation.dispatch(reset);
-  };
+  const reset: CommonActions.Action = CommonActions.reset({
+    index: 0,
+    routes: [{name: routeRedirect}],
+  });
 
-  return {
-    resetHistory,
-  };
+  navigation.dispatch(reset);
 };
-
-export default actionsNavigation;

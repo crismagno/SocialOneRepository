@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {IUser, TStepApp} from '../../types';
-import variablesLocalStorage from './variables';
+import LocalStorageEnum from './enum';
+import variablesLocalStorage from './enum';
 
 /**
  * Note: change functions to class and methods class
@@ -12,7 +13,7 @@ export const setUser = async (user: IUser): Promise<boolean> => {
 
   try {
     const userFormatted: string = JSON.stringify(user);
-    await AsyncStorage.setItem(variablesLocalStorage.USER, userFormatted);
+    await AsyncStorage.setItem(LocalStorageEnum.Keys.USER, userFormatted);
     return true;
   } catch (error) {
     return false;
@@ -22,7 +23,7 @@ export const setUser = async (user: IUser): Promise<boolean> => {
 export const getUser = async (): Promise<IUser | null> => {
   try {
     const userStorage: string = await AsyncStorage.getItem(
-      variablesLocalStorage.USER,
+      LocalStorageEnum.Keys.USER,
     );
     if (userStorage && userStorage.trim()) {
       const userStorageFormatted: IUser = JSON.parse(userStorage);
@@ -36,7 +37,7 @@ export const getUser = async (): Promise<IUser | null> => {
 
 export const removeUser = async (): Promise<boolean> => {
   try {
-    await AsyncStorage.removeItem(variablesLocalStorage.USER);
+    await AsyncStorage.removeItem(LocalStorageEnum.Keys.USER);
     return true;
   } catch (error) {
     return false;
@@ -49,7 +50,7 @@ export const updatePropertyUser = async (
 ): Promise<IUser | null> => {
   try {
     const userStorage: string = await AsyncStorage.getItem(
-      variablesLocalStorage.USER,
+      LocalStorageEnum.Keys.USER,
     );
 
     // valid if user exists
@@ -70,7 +71,7 @@ export const updatePropertyUser = async (
 
       // transform user updated to it will be saved os storage
       const userFormatted: string = JSON.stringify(userStorageUpdated);
-      await AsyncStorage.setItem(variablesLocalStorage.USER, userFormatted);
+      await AsyncStorage.setItem(LocalStorageEnum.Keys.USER, userFormatted);
 
       return userStorageUpdated;
     }
@@ -85,7 +86,7 @@ export const setStep = async (step: TStepApp): Promise<boolean> => {
   if (!step) return false;
 
   try {
-    await AsyncStorage.setItem(variablesLocalStorage.STEP, step);
+    await AsyncStorage.setItem(LocalStorageEnum.Keys.STEP, step);
     return true;
   } catch (error) {
     return false;
@@ -95,7 +96,7 @@ export const setStep = async (step: TStepApp): Promise<boolean> => {
 export const getStep = async (): Promise<TStepApp | null> => {
   try {
     const stepStorage: TStepApp = (await AsyncStorage.getItem(
-      variablesLocalStorage.STEP,
+      LocalStorageEnum.Keys.STEP,
     )) as TStepApp;
     if (stepStorage && stepStorage.trim()) {
       return stepStorage;
@@ -108,7 +109,7 @@ export const getStep = async (): Promise<TStepApp | null> => {
 
 export const removeStep = async (): Promise<boolean> => {
   try {
-    await AsyncStorage.removeItem(variablesLocalStorage.STEP);
+    await AsyncStorage.removeItem(LocalStorageEnum.Keys.STEP);
     return true;
   } catch (error) {
     return false;

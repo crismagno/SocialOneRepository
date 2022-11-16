@@ -1,6 +1,6 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {ImageBackground, Animated, View} from 'react-native';
-import {colorsSocial, images} from '../../assets/general';
+import React, {useEffect, useRef, useState} from 'react';
+import {Animated, View} from 'react-native';
+import {colorsSocial} from '../../assets/general';
 import CardListPeople from '../../components/CardListPeople/index';
 import If from '../../elements/If';
 import Loading from '../../elements/Loading';
@@ -12,18 +12,15 @@ import {chat as chatService} from './../../services';
 import NoneData from '../../components/NoneData';
 import Search from '../../components/Search';
 import ButtonLoadMore from '../../elements/ButtonLoadMore';
-import {errorHandling, returnColorBasedOnLight} from '../../helpers/global';
-import { ViewGradient } from '../../elements/ViewGradient';
-import { handleScrollEvent } from "./../../helpers/scroll";
-import { SnackBarSocialDefault } from '../../elements/SnackBarSocial';
-import { effectAnimationResult } from '../../helpers/animation';
+import {errorHandling} from '../../helpers/global';
+import {ViewGradient} from '../../elements/ViewGradient';
+import {handleScrollEvent} from './../../helpers/scroll';
+import {SnackBarSocialDefault} from '../../elements/SnackBarSocial';
+import {effectAnimationResult} from '../../helpers/animation';
 
 const People: React.FC<any> = (props): JSX.Element => {
-
   const {actionsPeople, actionsUser} = IndexActionsStore();
 
-  const imageWallpaper =
-    actionsUser?.state?.background?.people ?? images?.wallpapers[1];
   const [load, setLoad] = useState(true);
   const [loadMoreChats, setLoadMoreChats] = useState(false);
   const limitSearch = 10;
@@ -31,17 +28,10 @@ const People: React.FC<any> = (props): JSX.Element => {
   const flatListRef: React.MutableRefObject<null> = useRef(null);
   const data = actionsPeople?.state?.people;
   const [colorComponents, setColorComponents] = useState(colorsSocial.colorA1); // cor principal dos componentes filhos
-  
-  // metodos de criacao do componente
+
   useEffect(() => {
     getUsers();
   }, []);
-
-  // executar evento quando imageWallpaper mudar
-  // useEffect(() => {
-  //   colorTextByImage();
-  // }, [imageWallpaper]);
-  //----------------------------------
 
   const getUsers = async (): Promise<void> => {
     try {
@@ -52,9 +42,9 @@ const People: React.FC<any> = (props): JSX.Element => {
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3
+        colorButton: colorsSocial.colorA3,
       });
     } finally {
       setLoad(false);
@@ -71,10 +61,10 @@ const People: React.FC<any> = (props): JSX.Element => {
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3
-    });
+        colorButton: colorsSocial.colorA3,
+      });
     } finally {
       setLoadMoreChats(false);
     }
@@ -89,10 +79,10 @@ const People: React.FC<any> = (props): JSX.Element => {
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3
-    });
+        colorButton: colorsSocial.colorA3,
+      });
     } finally {
       setLoadMoreChats(false);
     }
@@ -104,23 +94,20 @@ const People: React.FC<any> = (props): JSX.Element => {
   const addUserForMyChat = async (person: IPeopleItem): Promise<void> => {
     try {
       setLoad(true);
-      const data = await chatService.create(
-        actionsUser.state._id,
-        person._id,
-        );
-        props.navigation.navigate('Conversation', {
-          chat: data.chat,
-        });
-      } catch (error) {
-        SnackBarSocialDefault({
-          text: errorHandling(error),
-          duration: "LENGTH_LONG",
-          textColor: colorsSocial.colorA3,
-          colorButton: colorsSocial.colorA3
-        });
-      } finally {
-        setLoad(false);
-      }
+      const data = await chatService.create(actionsUser.state._id, person._id);
+      props.navigation.navigate('Conversation', {
+        chat: data.chat,
+      });
+    } catch (error) {
+      SnackBarSocialDefault({
+        text: errorHandling(error),
+        duration: 'LENGTH_LONG',
+        textColor: colorsSocial.colorA3,
+        colorButton: colorsSocial.colorA3,
+      });
+    } finally {
+      setLoad(false);
+    }
   };
 
   const renderItem = ({item, index}: RenderItem<IPeopleItem>): JSX.Element => {
@@ -140,12 +127,6 @@ const People: React.FC<any> = (props): JSX.Element => {
     );
   };
 
-  // change color of text fo card by image color dominant
-  const colorTextByImage = async (): Promise<void> => {
-    const color = await returnColorBasedOnLight(imageWallpaper, colorsSocial.colorA7, colorsSocial.colorA1);
-    setColorComponents(color);
-  };
-
   return (
     <ViewGradient style={styles.imageBackground}>
       <Loading show={load} />
@@ -155,21 +136,13 @@ const People: React.FC<any> = (props): JSX.Element => {
             {
               translateY: effectAnimationResult(
                 scrollY,
-                [0, 20, 100], 
-                [0, 20, 50]
+                [0, 20, 100],
+                [0, 20, 50],
               ),
-            }
+            },
           ],
-          height: effectAnimationResult(
-            scrollY,
-            [0, 30, 100], 
-            [50, 40, 0]
-          ),
-          opacity: effectAnimationResult(
-            scrollY,
-            [1, 30, 40], 
-            [1, 1, 0]
-          ),
+          height: effectAnimationResult(scrollY, [0, 30, 100], [50, 40, 0]),
+          opacity: effectAnimationResult(scrollY, [1, 30, 40], [1, 1, 0]),
         }}
         colorComponents={colorComponents}
         show={true}
@@ -183,8 +156,11 @@ const People: React.FC<any> = (props): JSX.Element => {
             ref={flatListRef}
             style={styles.containerList}
             contentContainerStyle={styles.containerListStyle}
-            data={data.map((el: IPeopleItem, key: number) => ({...el, key: key}))}
-            keyExtractor={item => `people-${item.key}`}
+            data={data.map((el: IPeopleItem, key: number) => ({
+              ...el,
+              key: key,
+            }))}
+            keyExtractor={(item) => `people-${item.key}`}
             renderItem={renderItem}
             horizontal={false}
             showsVerticalScrollIndicator={true}
@@ -192,7 +168,7 @@ const People: React.FC<any> = (props): JSX.Element => {
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {
                 useNativeDriver: false,
-                listener: handleScroll
+                listener: handleScroll,
               },
             )}
             scrollEventThrottle={32}

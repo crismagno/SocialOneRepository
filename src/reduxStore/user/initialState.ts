@@ -1,16 +1,15 @@
-import { IUserInitialState } from "./types";
-import { images } from "./../../assets/general";
+import {IUserInitialState} from './types';
 
 export const initialState: IUserInitialState = {
-    _id: null,
-    fullName: null,
-    email: null,
-    phone: null,
-    avatar: null,
-    token: null,
-    online: false,
-    background: {
-        home: images.wallpapers[3],
-        people: images.wallpapers[4]
-    }
+  _id: null,
+  fullName: null,
+  email: null,
+  phone: null,
+  avatar: null,
+  token: null,
+  online: false,
+  background: {
+    home: '#0006',
+    people: '#0006',
+  },
 };

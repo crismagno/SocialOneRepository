@@ -1,11 +1,11 @@
-import React, {useEffect, useCallback, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import Logo from '../../elements/Logo';
 import styles from './styles';
 import localStorage from './../../infra/localStorage';
 import {IndexActionsStore} from './../../reduxStore';
 import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
-import actionsNavigation from './../../navigation/actions';
+import {resetHistory} from './../../navigation/actions';
 import {IUser, TRouteRedirect, TStepApp} from '../../types';
 import * as Animatable from 'react-native-animatable';
 import UserEnum from '../../shared/user/user.enum';
@@ -17,18 +17,12 @@ const SplashInit: React.FC = (props): JSX.Element => {
 
   const {actionsUser} = IndexActionsStore();
   const animatableRef = useRef<Animatable.View & View>(null);
-  // actions navigation witch reset routes
-  const execActionsNavigation = actionsNavigation(props);
-
-  const goToRoute = (route: TRouteRedirect): void => {
-    execActionsNavigation.resetHistory(route);
-  };
 
   const animationInitial = async (): Promise<void> => {
     await animatableRef.current?.animate('slideInUp', 1000);
     const responseVerifySession = await verifySessionUser();
     await animatableRef.current?.animate('slideOutUp', 1000);
-    goToRoute(responseVerifySession);
+    resetHistory(props, responseVerifySession);
   };
 
   const verifySessionUser = async (): Promise<TRouteRedirect> => {
@@ -63,7 +57,7 @@ const SplashInit: React.FC = (props): JSX.Element => {
   return (
     <View style={styles.container}>
       <Animatable.View ref={animatableRef}>
-        <Logo type={3} width={120} height={140} />
+        <Logo type={0} width={120} height={140} />
       </Animatable.View>
     </View>
   );

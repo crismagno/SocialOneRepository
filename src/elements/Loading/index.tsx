@@ -3,7 +3,7 @@ import * as Animatable from 'react-native-animatable';
 import LoadGif from '../LoadGif';
 import If from '../If';
 import styles from './styles';
-import { ILoadingProps } from './types';
+import {ILoadingProps} from './types';
 
 export const Loading: React.FC<ILoadingProps> = (props): JSX.Element => {
   useEffect(() => {

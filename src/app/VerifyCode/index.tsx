@@ -14,7 +14,7 @@ import {code as codeService} from './../../services';
 import localStorage from './../../infra/localStorage';
 import {colorsSocial} from '../../assets/general/colors';
 import {errorHandling} from '../../helpers/global';
-import actionsNavigation from './../../navigation/actions';
+import {resetHistory} from './../../navigation/actions';
 import {TRouteRedirect} from '../../types';
 import * as Animatable from 'react-native-animatable';
 import Logo from '../../elements/Logo';
@@ -29,8 +29,6 @@ const VerifyCode: React.FC<any> = (props): JSX.Element => {
   const {actionsUser} = IndexActionsStore();
   const user = actionsUser?.state;
 
-  const execActionsNavigation = actionsNavigation(props);
-
   const quantityInputs: number = 4;
   const inputsArrayString: string[] = Array(quantityInputs).fill('');
   const inputsRef: MutableRefObject<any>[] = inputsArrayString.map(() =>
@@ -40,18 +38,16 @@ const VerifyCode: React.FC<any> = (props): JSX.Element => {
   const [code, setCode] = useState<string[]>(inputsArrayString);
   const [load, setLoad] = useState<boolean>(false);
 
-  const goToRoute = (route: TRouteRedirect): void => {
-    execActionsNavigation.resetHistory(route);
-  };
+  const goToRoute = (route: TRouteRedirect): void => resetHistory(props, route);
 
   const validateInputs = (): boolean => {
     const validCode = code.join('').replace(' ', '');
     if (validCode.length < quantityInputs) {
       SnackBarSocialDefault({
         text: 'Fill all field',
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3
+        colorButton: colorsSocial.colorA3,
       });
       return true;
     }
@@ -72,16 +68,16 @@ const VerifyCode: React.FC<any> = (props): JSX.Element => {
       goToRoute('App');
       SnackBarSocialDefault({
         text: response.message,
-        duration: "LENGTH_SHORT",
+        duration: 'LENGTH_SHORT',
         textColor: colorsSocial.colorA1,
-        colorButton: colorsSocial.colorA1
+        colorButton: colorsSocial.colorA1,
       });
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3
+        colorButton: colorsSocial.colorA3,
       });
     } finally {
       setLoad(false);
@@ -96,16 +92,16 @@ const VerifyCode: React.FC<any> = (props): JSX.Element => {
       });
       SnackBarSocialDefault({
         text: response.message,
-        duration: "LENGTH_SHORT",
+        duration: 'LENGTH_SHORT',
         textColor: colorsSocial.colorA1,
-        colorButton: colorsSocial.colorA1
+        colorButton: colorsSocial.colorA1,
       });
     } catch (error) {
       SnackBarSocialDefault({
         text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3
+        colorButton: colorsSocial.colorA3,
       });
     }
   };
@@ -165,7 +161,7 @@ const VerifyCode: React.FC<any> = (props): JSX.Element => {
         </Animatable.View>
       </View>
       <View style={styles.containerCenter}>
-        <Logo type={3} width={70} height={90} />
+        <Logo type={0} width={70} height={90} />
         {/* <Text style={styles.textSend}>{'Social Code'}</Text> */}
         <View style={styles.viewInputsCode}>
           {code.map(
