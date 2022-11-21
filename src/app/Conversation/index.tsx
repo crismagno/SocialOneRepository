@@ -5,11 +5,8 @@ import styles from './styles';
 import ConversationTop from './components/Top';
 import ConversationCenter from './components/Center';
 import ConversationBottom from './components/Bottom';
-import { IPeopleItem, IUserMakingActionOnChat} from '../../types';
-import {
-  message as messageService,
-  chat as chatService,
-} from './../../services';
+import {IPeopleItem, IUserMakingActionOnChat} from '../../types';
+import {message as messageService, chat as chatService} from './../../services';
 import {IConversation} from '../../reduxStore/conversation/types';
 import {IChatSchema} from '../../services/chat/types';
 import {IMessageSchema} from '../../services/message/types';
@@ -17,10 +14,9 @@ import Loading from '../../elements/Loading';
 import ModalRemoveMessages from './components/ModalRemoveMessages';
 import {TChooseRemoveMessages, TtypeShowEvent} from './types';
 import {IMessageProps} from './components/Center/components/Message/types';
-import { colorsSocial } from '../../assets/general';
+import {colorsSocial} from '../../assets/general';
 
 const Conversation: React.FC<any> = (props): JSX.Element => {
-
   // get data about chat by chatId
   useEffect(() => {
     componentDidMounted();
@@ -43,26 +39,32 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
       Keyboard.removeListener('keyboardDidHide', _keyboardDidHide);
     };
   }, []);
-  
+
   //----------------- PART VARIABLES STORE ---------------------------------
   const {actionsSocket, actionsUser, actionsConversation} = IndexActionsStore();
 
   const globalSocket = actionsSocket?.socketStateStore?.socket; // configuracoes do socket
-  const user = actionsUser?.state; // user do sistema 
+  const user = actionsUser?.state; // user do sistema
   const userChat = actionsConversation?.state?.userChat; // dados do usuario atual do chat
-  const messages: Array<IMessageProps | IMessageSchema> = actionsConversation?.state?.messages; // array das mensagens exibidas
+  const messages: Array<IMessageProps | IMessageSchema> =
+    actionsConversation?.state?.messages; // array das mensagens exibidas
   const chatData: IChatSchema = actionsConversation?.state?.chatData; // dados do chat atual
 
   //----------------- PART VARIABLES STATE ---------------------------------
   const [text, setText] = useState<string>(''); // text do input
   const [loadInitial, setLoadInitial] = useState<boolean>(false); // load inicial
   const [loadGetMessages, setLoadGetMessages] = useState<boolean>(false); // load de busca das mensagens
-  const [showModalRemoveMessages, setShowModalRemoveMessages] = useState<boolean>(false); // habilitar modal de deletar mensagens
-  const [actionTypingChat, setActionTypingChat] = useState<IUserMakingActionOnChat["action"]>(null); // habilitar modal de deletar mensagens
-
+  const [
+    showModalRemoveMessages,
+    setShowModalRemoveMessages,
+  ] = useState<boolean>(false); // habilitar modal de deletar mensagens
+  const [actionTypingChat, setActionTypingChat] = useState<
+    IUserMakingActionOnChat['action']
+  >(null); // habilitar modal de deletar mensagens
 
   // usado para validar se existe de outros usuarios, nas mensagens selecionadas
-  const existMessageOthersUsers: boolean = messages
+  const existMessageOthersUsers: boolean =
+    messages
       ?.filter(
         (mes: IMessageSchema) =>
           actionsConversation?.state?.messagesSelected?.indexOf(mes?._id) !==
@@ -81,21 +83,21 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
     // get user that dont is of my
     const filterUserChatNotMe: IPeopleItem[] = configsChat?.users?.filter(
       (person: IPeopleItem): boolean => person._id !== user._id,
-      );
-      
-      // validar se no chat tem so os meus usuarios
-      const usersChatIsOnlyMe: boolean =
+    );
+
+    // validar se no chat tem so os meus usuarios
+    const usersChatIsOnlyMe: boolean =
       configsChat?.users?.filter(
         (person: IPeopleItem): boolean => person._id === user._id,
-        ).length >= 2;
-        
-        // usuario que sera mostrado no chat
-        const userShowChat: IPeopleItem = usersChatIsOnlyMe
-        ? user
-        : filterUserChatNotMe?.length > 0
-        ? filterUserChatNotMe[0]
-        : null;
-        
+      ).length >= 2;
+
+    // usuario que sera mostrado no chat
+    const userShowChat: IPeopleItem = usersChatIsOnlyMe
+      ? user
+      : filterUserChatNotMe?.length > 0
+      ? filterUserChatNotMe[0]
+      : null;
+
     //inserir dados do chat atual e do usuario
     actionsConversation.setChatDataConversation(configsChat);
     actionsConversation.setUserChatConversation(userShowChat);
@@ -164,14 +166,16 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
         );
 
         // retorna as mensagens mescladas para setar no componente de mensagens
-        actionsConversation.setMessages(responseMessagesByLastMessage?.messages);
+        actionsConversation.setMessages(
+          responseMessagesByLastMessage?.messages,
+        );
       }
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        text: getMessageError(error),
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13
+        colorButton: colorsSocial.colorA13,
       });
     } finally {
       setLoadInitial(false);
@@ -227,14 +231,14 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
           } else {
             return message;
           }
-        })
+        }),
       );
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        text: getMessageError(error),
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13
+        colorButton: colorsSocial.colorA13,
       });
 
       // setando erro no envio da mensagem
@@ -261,7 +265,6 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
         chooseUsersToRemoveMessages === 'ONLY_TO_ME'
           ? Array(user?._id)
           : chatData?.users?.map((user: IPeopleItem) => user?._id);
-      
 
       const responseMessages = await messageService.removeMessages(
         user._id,
@@ -272,10 +275,10 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
       updatedMessagesComponent(responseMessages?.messages);
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        text: getMessageError(error),
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13
+        colorButton: colorsSocial.colorA13,
       });
     } finally {
       actionsConversation?.setMessagesSelected([]);
@@ -284,7 +287,6 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
 
   // evento de voltar a pagina pelo botao do dispositivo
   const backAction = () => {
-    
     // if (actionsConversation?.state?.messagesSelected.length > 0) {
     //   actionsConversation?.setMessagesSelected([]);
     //   return true;
@@ -313,13 +315,15 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
   };
 
   // voltar a pagina anterior
-  const goBackRoute = (): void => props?.navigation?.navigate("Home");
+  const goBackRoute = (): void => props?.navigation?.navigate('Home');
 
   // buscar as mensagens pelo scroll da lista
   const getMoreMessages = async (): Promise<void> => {
     try {
       if (!chatByParams?._id || loadGetMessages) {
-        console.log('parametro chat nao existe.... ou load de get messages processando...');
+        console.log(
+          'parametro chat nao existe.... ou load de get messages processando...',
+        );
         return;
       }
       setLoadGetMessages(true);
@@ -339,14 +343,17 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
           skipGetMessages,
         );
 
-        actionsConversation.setMessages((messages) => [...messages, ...responseMessages?.messages]);
+        actionsConversation.setMessages((messages) => [
+          ...messages,
+          ...responseMessages?.messages,
+        ]);
       }
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: "LENGTH_LONG",
+        text: getMessageError(error),
+        duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13
+        colorButton: colorsSocial.colorA13,
       });
     } finally {
       setLoadGetMessages(false);
@@ -361,7 +368,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
         break;
       default:
         break;
-    };
+    }
   };
 
   // acoes do chat como enviar texto e audio etc...
@@ -409,26 +416,35 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
 
     // inserir os dados do textarea
     actionsConversation?.setTextConversation(chatByParams?._id, value);
-    
+
     // validar se e o msm usuario do chat e nao enviar socket de acao
     if (userChat?._id === user?._id) return;
 
     // validar se sera enviado o socket de acao do chat novamente
-    if (value.trim() && actionTypingChat !== "text") {
+    if (value.trim() && actionTypingChat !== 'text') {
       userMakingActionByChat(true, 'text');
-    };
-    
+    }
+
     // validar se sera enviado o socket de acao do chat novamente
     if (!value.trim() && actionTypingChat) {
       userMakingActionByChat(false, null);
-    };
-    
+    }
   };
 
   // validar existencia do id do chat
   if (!chatByParams?._id) {
-    return <View style={{justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}><Text>CHAT DONT EXISTS!</Text></View>
-  };
+    return (
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+        }}>
+        <Text>CHAT DONT EXISTS!</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -472,11 +488,15 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
 };
 
 export default memo(Conversation);
-function errorHandling(error: any) {
+function getMessageError(error: any) {
   throw new Error('Function not implemented.');
 }
 
-function SnackBarSocialDefault(arg0: { text: void; duration: string; textColor: any; colorButton: any; }) {
+function SnackBarSocialDefault(arg0: {
+  text: void;
+  duration: string;
+  textColor: any;
+  colorButton: any;
+}) {
   throw new Error('Function not implemented.');
 }
-

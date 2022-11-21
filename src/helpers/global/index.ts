@@ -1,4 +1,6 @@
 import ImageColors from 'react-native-image-colors';
+import {colorsSocial} from '../../assets/general';
+import SnackBarSocialDefault from '../../elements/SnackBarSocial';
 
 // let imagePath = Image.resolveAssetSource(props.image).uri
 
@@ -7,16 +9,16 @@ export const validateEmail = (email: string): boolean => {
   return re.test(email);
 };
 
-export const errorHandling = (error: any): string => {
-  let errorReturn: string = '';
+export const getMessageError = (error: any): string => {
   if (error?.response?.data?.message) {
-    errorReturn = `${error?.response?.data?.message}`;
+    return `${error?.response?.data?.message}`;
   } else if (error?.response?.data) {
-    errorReturn = `${error?.response?.data}`;
+    return `${error?.response?.data}`;
+  } else if (error?.message) {
+    return error.message;
   } else {
-    errorReturn = 'Error Social Network';
+    return 'Error Social Network';
   }
-  return errorReturn;
 };
 
 export const getColorDominantImage = async (image: any): Promise<string> => {
@@ -70,9 +72,18 @@ export const returnColorBasedOnLight = async (
   }
 };
 
+export const handleError = (error: any): void => {
+  SnackBarSocialDefault({
+    text: getMessageError(error),
+    duration: 'LENGTH_LONG',
+    textColor: colorsSocial.colorA13,
+    colorButton: colorsSocial.colorA13,
+  });
+};
+
 export default {
   validateEmail,
-  errorHandling,
+  getMessageError,
   getColorDominantImage,
   luminosity,
   colorImageIsLight,

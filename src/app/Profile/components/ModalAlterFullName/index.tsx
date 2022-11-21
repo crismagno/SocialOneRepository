@@ -8,10 +8,10 @@ import {colorsSocial} from '../../../../assets/general';
 import ButtonGradient from '../../../../elements/ButtonGradient';
 import {IndexActionsStore} from '../../../../reduxStore';
 import {user as userService} from '../../../../services';
-import {errorHandling} from '../../../../helpers/global';
+import {getMessageError} from '../../../../helpers/global';
 import localStorage from '../../../../infra/localStorage';
 import {TextInputProps} from 'react-native-paper/lib/typescript/components/TextInput/TextInput';
-import { SnackBarSocialDefault } from "./../../../../elements/SnackBarSocial";
+import {SnackBarSocialDefault} from './../../../../elements/SnackBarSocial';
 
 export interface IModalAlterFullNameProps {
   show: boolean;
@@ -21,7 +21,6 @@ export interface IModalAlterFullNameProps {
 const ModalAlterFullName: React.FC<IModalAlterFullNameProps> = (
   props,
 ): JSX.Element => {
-  
   // event to show modal
   useEffect(() => {
     animationShow();
@@ -43,7 +42,7 @@ const ModalAlterFullName: React.FC<IModalAlterFullNameProps> = (
     } else {
       modalizeRef?.current?.close();
       initVariablesByComponent();
-    };
+    }
   };
 
   const updateFullName = async (): Promise<void> => {
@@ -56,17 +55,17 @@ const ModalAlterFullName: React.FC<IModalAlterFullNameProps> = (
       );
       actionsUser.updateProfileInfo('fullName', newFullName);
       await localStorage.updatePropertyUser('fullName', newFullName);
-      setNewFullName("");
+      setNewFullName('');
       SnackBarSocialDefault({
         text: response.message,
-        colorButton: colorsSocial.colorA4
+        colorButton: colorsSocial.colorA4,
       });
       props.onClose();
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
+        text: getMessageError(error),
         colorButton: colorsSocial.colorA3,
-        textColor: colorsSocial.colorA3
+        textColor: colorsSocial.colorA3,
       });
     } finally {
       setLoad(false);
@@ -76,7 +75,7 @@ const ModalAlterFullName: React.FC<IModalAlterFullNameProps> = (
   const initVariablesByComponent = () => {
     setNewFullName(user?.fullName);
     setLoad(false);
-  }
+  };
 
   return (
     <Modalize
@@ -98,11 +97,11 @@ const ModalAlterFullName: React.FC<IModalAlterFullNameProps> = (
           value={user.fullName}
           disabled
           left={
-            <TextInput.Icon 
-              style={{ marginTop: setSize(15)}}
-              name="account" 
+            <TextInput.Icon
+              style={{marginTop: setSize(15)}}
+              name="account"
               size={setSize(20)}
-              color={"#0005"}
+              color={'#0005'}
             />
           }
         />
@@ -119,9 +118,9 @@ const ModalAlterFullName: React.FC<IModalAlterFullNameProps> = (
           disabled={load}
           selectTextOnFocus={true}
           left={
-            <TextInput.Icon 
-              style={{ marginTop: setSize(15)}}
-              name="account" 
+            <TextInput.Icon
+              style={{marginTop: setSize(15)}}
+              name="account"
               size={setSize(20)}
               color={colorsSocial.colorA4}
             />

@@ -12,21 +12,26 @@ import {chat as chatService} from './../../services';
 import NoneData from '../../components/NoneData';
 import Search from '../../components/Search';
 import ButtonLoadMore from '../../elements/ButtonLoadMore';
-import {errorHandling} from '../../helpers/global';
+import {handleError} from '../../helpers/global';
 import {ViewGradient} from '../../elements/ViewGradient';
 import {handleScrollEvent} from './../../helpers/scroll';
-import {SnackBarSocialDefault} from '../../elements/SnackBarSocial';
 import {effectAnimationResult} from '../../helpers/animation';
 
 const People: React.FC<any> = (props): JSX.Element => {
   const {actionsPeople, actionsUser} = IndexActionsStore();
 
   const [load, setLoad] = useState(true);
+
   const [loadMoreChats, setLoadMoreChats] = useState(false);
+
   const limitSearch = 10;
+
   const scrollY: Animated.Value = useRef(new Animated.Value(0)).current;
+
   const flatListRef: React.MutableRefObject<null> = useRef(null);
+
   const data = actionsPeople?.state?.people;
+
   const [colorComponents, setColorComponents] = useState(colorsSocial.colorA1); // cor principal dos componentes filhos
 
   useEffect(() => {
@@ -40,12 +45,7 @@ const People: React.FC<any> = (props): JSX.Element => {
       const people = await userService.getUsers(searchValue, skip, limitSearch);
       actionsPeople.setPeople(people);
     } catch (error) {
-      SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3,
-      });
+      handleError(error);
     } finally {
       setLoad(false);
     }
@@ -59,12 +59,7 @@ const People: React.FC<any> = (props): JSX.Element => {
       const people = await userService.getUsers(searchValue, skip, limitSearch);
       actionsPeople?.addPeople(people);
     } catch (error) {
-      SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3,
-      });
+      handleError(error);
     } finally {
       setLoadMoreChats(false);
     }
@@ -77,12 +72,7 @@ const People: React.FC<any> = (props): JSX.Element => {
       const people = await userService.getUsers(searchValue, 0, limitSearch);
       actionsPeople.setPeople(people);
     } catch (error) {
-      SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3,
-      });
+      handleError(error);
     } finally {
       setLoadMoreChats(false);
     }
@@ -99,12 +89,7 @@ const People: React.FC<any> = (props): JSX.Element => {
         chat: data.chat,
       });
     } catch (error) {
-      SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3,
-      });
+      handleError(error);
     } finally {
       setLoad(false);
     }

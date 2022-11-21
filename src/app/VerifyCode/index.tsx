@@ -13,7 +13,7 @@ import {backgrounds} from '../../assets/general/images';
 import {code as codeService} from './../../services';
 import localStorage from './../../infra/localStorage';
 import {colorsSocial} from '../../assets/general/colors';
-import {errorHandling} from '../../helpers/global';
+import {getMessageError} from '../../helpers/global';
 import {resetHistory} from './../../navigation/actions';
 import {TRouteRedirect} from '../../types';
 import * as Animatable from 'react-native-animatable';
@@ -74,7 +74,7 @@ const VerifyCode: React.FC<any> = (props): JSX.Element => {
       });
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
+        text: getMessageError(error),
         duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
         colorButton: colorsSocial.colorA3,
@@ -98,7 +98,7 @@ const VerifyCode: React.FC<any> = (props): JSX.Element => {
       });
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
+        text: getMessageError(error),
         duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
         colorButton: colorsSocial.colorA3,

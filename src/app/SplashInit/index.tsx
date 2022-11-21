@@ -11,27 +11,30 @@ import * as Animatable from 'react-native-animatable';
 import UserEnum from '../../shared/user/user.enum';
 
 const SplashInit: React.FC = (props): JSX.Element => {
-  useEffect(() => {
-    animationInitial();
-  }, []);
-
   const {actionsUser} = IndexActionsStore();
-  const animatableRef = useRef<Animatable.View & View>(null);
 
-  const animationInitial = async (): Promise<void> => {
+  const animatableRef: React.MutableRefObject<any> = useRef<
+    Animatable.View & View
+  >(null);
+
+  const initialize = async (): Promise<void> => {
     await animatableRef.current?.animate('slideInUp', 1000);
-    const responseVerifySession = await verifySessionUser();
+
+    const responseVerifySession = await getRouteByLastStepSession();
+
     await animatableRef.current?.animate('slideOutUp', 1000);
+
     resetHistory(props, responseVerifySession);
   };
 
-  const verifySessionUser = async (): Promise<TRouteRedirect> => {
+  const getRouteByLastStepSession = async (): Promise<TRouteRedirect> => {
     /* verify if user is localStorage Session
      * if user is session, make request to validate user exists on database
      * else user not redirect to signIn
      * if user exists on database verify "step fo localStorage Session"
      */
     const userLocalStorage: IUser = await localStorage.getUser();
+
     if (userLocalStorage) {
       StateRequestSocial.setTokenState(userLocalStorage.token); // insert in class de StateRequest
 
@@ -53,6 +56,10 @@ const SplashInit: React.FC = (props): JSX.Element => {
 
     return 'SignIn';
   };
+
+  useEffect(() => {
+    initialize();
+  }, []);
 
   return (
     <View style={styles.container}>

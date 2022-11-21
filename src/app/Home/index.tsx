@@ -15,7 +15,7 @@ import {user as userService} from './../../services';
 import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
 import {IMessageSchema} from '../../services/message/types';
 import {SnackBarSocialDefault} from '../../elements/SnackBarSocial';
-import {errorHandling} from '../../helpers/global';
+import {getMessageError} from '../../helpers/global';
 import {colorsSocial} from '../../assets/general';
 
 const Home: React.FC = (props): JSX.Element => {
@@ -28,10 +28,9 @@ const Home: React.FC = (props): JSX.Element => {
   } = IndexActionsStore();
 
   const globalSocket = actionsSocket?.socketStateStore?.socket;
-  const user = actionsUser?.state;
-  // const userChat = actionsConversation?.state?.userChat;
 
-  // sockets more importants general
+  const user = actionsUser?.state;
+
   useEffect(() => {
     // socket that inform new chat to creator and person
     globalSocket?.on(
@@ -213,7 +212,6 @@ const Home: React.FC = (props): JSX.Element => {
     };
   }, []);
 
-  // quando usuário entrar na tela home buscar os dados do usuário
   const getUserBackend = async () => {
     try {
       // validate where step came show app, if verifyCode don't get user again
@@ -230,7 +228,7 @@ const Home: React.FC = (props): JSX.Element => {
       StateRequestSocial.setTokenState(userBackend.token); // insert in class de StateRequest
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
+        text: getMessageError(error),
         duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA13,
         colorButton: colorsSocial.colorA13,

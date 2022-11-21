@@ -1,22 +1,25 @@
-import React, { memo } from 'react';
+import React, {memo} from 'react';
 import styles from './styles';
-import { IButtonLoadMoreProps } from './types';
+import {IButtonLoadMoreProps} from './types';
 import ButtonGradient from '../ButtonGradient';
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { setSize } from '../../helpers/responsive/Index';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {setSize} from '../../helpers/responsive/Index';
 
-export const ButtonLoadMore: React.FC<IButtonLoadMoreProps> = (props): JSX.Element => {
-  return <ButtonGradient
+export const ButtonLoadMore: React.FC<IButtonLoadMoreProps> = (
+  props,
+): JSX.Element => {
+  return (
+    <ButtonGradient
       style={styles.buttonGetMoreChatsByUser}
       load={props.load}
-      colors={["transparent", "transparent"]}
+      colors={['transparent', 'transparent']}
       onPress={props.onPress}
-      animationInitial={"pulse"}
-      animationClick={"pulse"}
+      animationInitial={'pulse'}
+      animationClick={'pulse'}
       iconRight={
         <Ionicons
-          name={"add-circle-outline"}
-          size={setSize(45)}
+          name={'add-circle-outline'}
+          size={setSize(30)}
           color={props?.colorComponents}
         />
       }
@@ -24,6 +27,7 @@ export const ButtonLoadMore: React.FC<IButtonLoadMoreProps> = (props): JSX.Eleme
       sizeLoad={30}
       typeLoad={1}
     />
+  );
 };
 
 export default memo(ButtonLoadMore);

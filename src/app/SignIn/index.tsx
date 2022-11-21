@@ -4,7 +4,7 @@ import styles from './styles';
 import {user as userService} from './../../services/index';
 import {IUserSignIn} from '../../services/user/types';
 import {IUser} from '../../types';
-import {errorHandling, validateEmail} from './../../helpers/global';
+import {getMessageError, validateEmail} from './../../helpers/global';
 import localStorage from './../../infra/localStorage';
 import {IndexActionsStore} from './../../reduxStore';
 import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
@@ -104,7 +104,7 @@ const SignIn: React.FC<any> = (props): JSX.Element => {
       });
     } catch (error) {
       SnackBarSocialDefault({
-        text: errorHandling(error),
+        text: getMessageError(error),
         duration: 'LENGTH_LONG',
         textColor: colorsSocial.colorA3,
         colorButton: colorsSocial.colorA3,

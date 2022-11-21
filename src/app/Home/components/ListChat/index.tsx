@@ -13,10 +13,9 @@ import {chat as chatService} from './../../../../services';
 import NoneData from '../../../../components/NoneData';
 import ButtonLoadMore from '../../../../elements/ButtonLoadMore';
 import Search from '../../../../components/Search';
-import {errorHandling} from '../../../../helpers/global';
+import {handleError} from '../../../../helpers/global';
 import ViewGradient from '../../../../elements/ViewGradient';
 import {handleScrollEvent} from '../../../../helpers/scroll';
-import SnackBarSocialDefault from '../../../../elements/SnackBarSocial';
 import {IUserInitialState} from '../../../../reduxStore/user/types';
 
 const ListChat: React.FC<any> = (props): JSX.Element => {
@@ -45,7 +44,6 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
 
   const colorComponents: string = colorsSocial.colorA1;
 
-  // metodos de criacao do componente
   useEffect(() => {
     getChatsByUser();
   }, []);
@@ -53,22 +51,21 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
   const getChatsByUser = async (): Promise<void> => {
     try {
       setLoad(true);
-      const skip = actionsChat?.state?.chats?.length || 0;
+
+      const skip: number = actionsChat?.state?.chats?.length || 0;
+
       const searchValue = actionsChat?.state?.searchValue;
+
       const data = await chatService.getChatsByUser(
         user._id,
         searchValue,
         skip,
         limitSearch,
       );
+
       actionsChat.setChats(data?.chats);
-    } catch (error) {
-      SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+    } catch (error: any) {
+      handleError(error);
     } finally {
       setLoad(false);
     }
@@ -87,12 +84,7 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
       );
       actionsChat.addChats(data?.chats);
     } catch (error) {
-      SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+      handleError(error);
     } finally {
       setLoadMoreChats(false);
     }
@@ -110,12 +102,7 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
       );
       actionsChat.setChats(data?.chats);
     } catch (error) {
-      SnackBarSocialDefault({
-        text: errorHandling(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+      handleError(error);
     } finally {
       setLoadMoreChats(false);
     }
