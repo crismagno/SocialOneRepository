@@ -6,21 +6,22 @@ import styles from './styles';
 import {ILoadingProps} from './types';
 
 export const Loading: React.FC<ILoadingProps> = (props): JSX.Element => {
+  const [show, setShow] = useState<boolean>(props.show);
+
+  const loadBoxAnimationRef = useRef(null);
+
   useEffect(() => {
+    const animationShow = async () => {
+      if (props.show) {
+        await loadBoxAnimationRef.current?.animate('fadeIn', 1000, 1500);
+      } else {
+        await loadBoxAnimationRef.current?.animate('fadeOut', 500, 500);
+      }
+      setShow(props.show);
+    };
+
     animationShow();
   }, [props.show]);
-
-  const animationShow = async () => {
-    if (props.show) {
-      await loadBoxAnimationRef.current?.animate('fadeIn', 1000, 1500);
-    } else {
-      await loadBoxAnimationRef.current?.animate('fadeOut', 500, 500);
-    }
-    setShow(props.show);
-  };
-
-  const [show, setShow] = useState<boolean>(props.show);
-  const loadBoxAnimationRef = useRef<any>(null);
 
   return (
     <If condition={show}>

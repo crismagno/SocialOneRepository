@@ -12,12 +12,15 @@ import HoursMessage from '../../elements/HoursMessage';
 import {getFileByPath} from '../../helpers/files';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import StatusSendMessage from '../../elements/StatusSendMessage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(
   TouchableOpacity,
 );
 
-export const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element => {
+export const CardListChat: React.FC<ICardLlistChatProps> = (
+  props,
+): JSX.Element => {
   useEffect(() => {
     if (props.animationInitial) {
       animationButtonRef.current?.animate(
@@ -34,6 +37,7 @@ export const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element 
   }, [props?.avatar]);
 
   const colorText = props?.colorComponents;
+
   const [avatar, setAvatar] = useState(
     props?.avatar ? {uri: getFileByPath(props?.avatar)} : images.avatars[0],
   );
@@ -43,16 +47,16 @@ export const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element 
     if (props.animationPress) {
       animationButtonRef.current.animate(props.animationPress, 150);
     }
-    props.onPressCard && props.onPressCard();
-  };
 
-  const onErrorAvatar = (error: any): void => {
-    if (error) setAvatar(images.avatars[0]);
+    props.onPressCard && props.onPressCard();
   };
 
   return (
     <>
-      {/* <Swipeable renderRightActions={renderRightActions}> */}
+      {/* <Swipeable
+        renderRightActions={() => (
+          <Ionicons name={'videocam-outline'} size={16} />
+        )}> */}
       <Animatable.View ref={animationButtonRef}>
         <AnimatedTouchableOpacity
           onPress={() => onPressCard()}
@@ -62,7 +66,7 @@ export const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element 
             <Image
               style={styles.avatar}
               source={avatar}
-              onError={onErrorAvatar}
+              onError={(error) => error && setAvatar(images.avatars[0])}
             />
             <Animatable.View
               style={styles.viewOnline(props.online, colorText)}
@@ -90,7 +94,9 @@ export const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element 
                   messageIsDisabled={props?.messageIsDisabled}
                 />
                 <If condition={props?.showStatusMessage}>
-                  <StatusSendMessage statusSendMessage={props?.statusSendMessage} />
+                  <StatusSendMessage
+                    statusSendMessage={props?.statusSendMessage}
+                  />
                 </If>
               </TouchableOpacity>
             </If>
@@ -109,7 +115,7 @@ export const CardListChat: React.FC<ICardLlistChatProps> = (props): JSX.Element 
           </View>
         </AnimatedTouchableOpacity>
       </Animatable.View>
-      {/* </Swipeable>  */}
+      {/* </Swipeable> */}
     </>
   );
 };

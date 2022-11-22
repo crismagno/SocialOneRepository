@@ -11,7 +11,6 @@ import * as Animatable from 'react-native-animatable';
 export const MessageTypeAction: React.FC<IMessageTypeActionProps> = (
   props,
 ): JSX.Element => {
-
   return (
     <If condition={!!props?.actionChat?.action?.trim()}>
       <Animatable.View
@@ -20,11 +19,7 @@ export const MessageTypeAction: React.FC<IMessageTypeActionProps> = (
         // iterationCount={'infinite'}
         iterationDelay={1000}>
         <If condition={props?.actionChat?.action === 'text'}>
-          <FontAwesome
-            name={'keyboard-o'}
-            size={15}
-            color={props?.colorText}
-          />
+          <FontAwesome name={'keyboard-o'} size={15} color={props?.colorText} />
           <Text
             style={{
               fontSize: setSize(10),

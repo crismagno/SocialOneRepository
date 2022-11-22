@@ -14,8 +14,7 @@ import localStorage from './../../infra/localStorage';
 import {user as userService} from './../../services';
 import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
 import {IMessageSchema} from '../../services/message/types';
-import {SnackBarSocialDefault} from '../../elements/SnackBarSocial';
-import {getMessageError} from '../../helpers/global';
+import {handleError} from '../../helpers/global';
 import {colorsSocial} from '../../assets/general';
 
 const Home: React.FC = (props): JSX.Element => {
@@ -214,25 +213,24 @@ const Home: React.FC = (props): JSX.Element => {
 
   const getUserBackend = async () => {
     try {
-      // validate where step came show app, if verifyCode don't get user again
       const stepLocalStorage: TStepApp = await localStorage.getStep();
+
       if (stepLocalStorage === 'VerifyCode') {
         await localStorage.setStep('App');
         return;
       }
 
       const userBackend = await userService.getUserById(user._id);
+
       actionsUser.setUser(userBackend);
+
       actionsUser.updateStatusOnline(true);
+
       await localStorage.setUser(userBackend);
-      StateRequestSocial.setTokenState(userBackend.token); // insert in class de StateRequest
+
+      StateRequestSocial.setTokenState(userBackend.token);
     } catch (error) {
-      SnackBarSocialDefault({
-        text: getMessageError(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+      handleError(error);
     }
   };
 
@@ -244,4 +242,4 @@ const Home: React.FC = (props): JSX.Element => {
   );
 };
 
-export default memo(Home);
+export default Home;

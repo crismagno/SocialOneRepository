@@ -74,14 +74,18 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
   const getMoreChatsByUser = async (): Promise<void> => {
     try {
       setLoadMoreChats(true);
+
       const skip = actionsChat?.state?.chats?.length || 0;
+
       const searchValue = actionsChat?.state?.searchValue;
+
       const data = await chatService.getChatsByUser(
         user._id,
         searchValue,
         skip,
         limitSearch,
       );
+
       actionsChat.addChats(data?.chats);
     } catch (error) {
       handleError(error);
@@ -130,12 +134,15 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
     // status do envio da mensagem se visto pelos outros usuarios
     const statusSendMessage =
       item?.lastMessage?.seenUsers?.length === item?.users?.length;
+
     const wasThisUserThatSendLastMessage =
       item?.lastMessage?.userSent === user?._id;
 
     // parte da animacao do componente
     const inputRange = [index * heightCard, (index + 2) * heightCard];
+
     const outputRange = [1, 0];
+
     const opacity = effectAnimationResult(scrollY, inputRange, outputRange);
 
     return (

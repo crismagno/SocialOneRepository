@@ -14,7 +14,7 @@ import Loading from '../../elements/Loading';
 import ModalRemoveMessages from './components/ModalRemoveMessages';
 import {TChooseRemoveMessages, TtypeShowEvent} from './types';
 import {IMessageProps} from './components/Center/components/Message/types';
-import {colorsSocial} from '../../assets/general';
+import {handleError} from './../../helpers/global';
 
 const Conversation: React.FC<any> = (props): JSX.Element => {
   // get data about chat by chatId
@@ -44,20 +44,28 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
   const {actionsSocket, actionsUser, actionsConversation} = IndexActionsStore();
 
   const globalSocket = actionsSocket?.socketStateStore?.socket; // configuracoes do socket
+
   const user = actionsUser?.state; // user do sistema
+
   const userChat = actionsConversation?.state?.userChat; // dados do usuario atual do chat
+
   const messages: Array<IMessageProps | IMessageSchema> =
     actionsConversation?.state?.messages; // array das mensagens exibidas
+
   const chatData: IChatSchema = actionsConversation?.state?.chatData; // dados do chat atual
 
   //----------------- PART VARIABLES STATE ---------------------------------
   const [text, setText] = useState<string>(''); // text do input
+
   const [loadInitial, setLoadInitial] = useState<boolean>(false); // load inicial
+
   const [loadGetMessages, setLoadGetMessages] = useState<boolean>(false); // load de busca das mensagens
+
   const [
     showModalRemoveMessages,
     setShowModalRemoveMessages,
   ] = useState<boolean>(false); // habilitar modal de deletar mensagens
+
   const [actionTypingChat, setActionTypingChat] = useState<
     IUserMakingActionOnChat['action']
   >(null); // habilitar modal de deletar mensagens
@@ -75,6 +83,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
   //##########################PART VARIABLES##################################
   // data of chat that come of home chats by params
   const chatByParams: IChatSchema = props?.route?.params?.chat || null;
+
   const limitGetMessages: number = 30;
 
   //########################PART OF METHODS DE EXECUCAO###########################
@@ -171,12 +180,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
         );
       }
     } catch (error) {
-      SnackBarSocialDefault({
-        text: getMessageError(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+      handleError(error);
     } finally {
       setLoadInitial(false);
     }
@@ -234,12 +238,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
         }),
       );
     } catch (error) {
-      SnackBarSocialDefault({
-        text: getMessageError(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+      handleError(error);
 
       // setando erro no envio da mensagem
       actionsConversation.setMessages((messages) =>
@@ -274,12 +273,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
       );
       updatedMessagesComponent(responseMessages?.messages);
     } catch (error) {
-      SnackBarSocialDefault({
-        text: getMessageError(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+      handleError(error);
     } finally {
       actionsConversation?.setMessagesSelected([]);
     }
@@ -299,6 +293,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
       userMakingActionByChat(true, 'text');
     }
   };
+
   const _keyboardDidHide = () => {
     userMakingActionByChat(false, null);
   };
@@ -349,12 +344,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
         ]);
       }
     } catch (error) {
-      SnackBarSocialDefault({
-        text: getMessageError(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA13,
-        colorButton: colorsSocial.colorA13,
-      });
+      handleError(error);
     } finally {
       setLoadGetMessages(false);
     }
@@ -431,19 +421,8 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
     }
   };
 
-  // validar existencia do id do chat
   if (!chatByParams?._id) {
-    return (
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          height: '100%',
-        }}>
-        <Text>CHAT DONT EXISTS!</Text>
-      </View>
-    );
+    return null;
   }
 
   return (
@@ -488,15 +467,3 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
 };
 
 export default memo(Conversation);
-function getMessageError(error: any) {
-  throw new Error('Function not implemented.');
-}
-
-function SnackBarSocialDefault(arg0: {
-  text: void;
-  duration: string;
-  textColor: any;
-  colorButton: any;
-}) {
-  throw new Error('Function not implemented.');
-}

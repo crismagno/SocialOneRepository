@@ -4,7 +4,7 @@ import styles from './styles';
 import {user as userService} from './../../services/index';
 import {IUserSignIn} from '../../services/user/types';
 import {IUser} from '../../types';
-import {getMessageError, validateEmail} from './../../helpers/global';
+import {handleError, validateEmail} from './../../helpers/global';
 import localStorage from './../../infra/localStorage';
 import {IndexActionsStore} from './../../reduxStore';
 import {StateRequestSocial} from '../../helpers/request/StateRequestSocial';
@@ -22,23 +22,26 @@ const SignIn: React.FC<any> = (props): JSX.Element => {
     email: '',
     password: '',
   });
+
   const [inputsError, setInputsError] = useState<IUserSignIn>({
     email: '',
     password: '',
   });
+
   const [load, setLoad] = useState<boolean>(false);
 
   useEffect(() => {
+    const componentWillMount = async (): Promise<void> => {
+      await localStorage.removeUser();
+      await localStorage.removeStep();
+    };
+
     componentWillMount();
   }, []);
 
-  const componentWillMount = async (): Promise<void> => {
-    await localStorage.removeUser();
-    await localStorage.removeStep();
-  };
-
   const validateInputs = (): boolean => {
     let numInputsInvalid = 0;
+
     for (const key in user) {
       if (user[key].trim() === '') {
         numInputsInvalid++;
@@ -103,12 +106,7 @@ const SignIn: React.FC<any> = (props): JSX.Element => {
         password: '',
       });
     } catch (error) {
-      SnackBarSocialDefault({
-        text: getMessageError(error),
-        duration: 'LENGTH_LONG',
-        textColor: colorsSocial.colorA3,
-        colorButton: colorsSocial.colorA3,
-      });
+      handleError(error);
     } finally {
       setLoad(false);
     }

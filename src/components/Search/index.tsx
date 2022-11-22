@@ -6,9 +6,10 @@ import {ISearchProps} from './types';
 import styles from './styles';
 
 export const Search: React.FC<ISearchProps> = (props): JSX.Element => {
-
   const colorText = props?.colorComponents;
+
   const inputRef = useRef(null);
+
   const theme = {
     colors: {
       primary: colorText,
@@ -21,9 +22,7 @@ export const Search: React.FC<ISearchProps> = (props): JSX.Element => {
 
   return (
     <If condition={props?.show}>
-      <Animated.View
-        style={[styles.container, props?.style]}
-    >
+      <Animated.View style={[styles.container, props?.style]}>
         <TextInput
           ref={inputRef}
           style={styles.input(colorText)}
@@ -35,9 +34,9 @@ export const Search: React.FC<ISearchProps> = (props): JSX.Element => {
           value={props.value}
           onChangeText={(text) => props.setValue(text)}
           right={
-            <TextInput.Icon 
-              name="magnify" 
-              color={colorText} 
+            <TextInput.Icon
+              name="magnify"
+              color={colorText}
               onPress={() => props.setValue(props.value)}
             />
           }
