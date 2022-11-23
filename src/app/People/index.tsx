@@ -41,8 +41,11 @@ const People: React.FC<any> = (props): JSX.Element => {
   const getUsers = async (): Promise<void> => {
     try {
       const skip = actionsPeople?.state?.people?.length || 0;
+
       const searchValue = actionsPeople?.state?.searchValue;
+
       const people = await userService.getUsers(searchValue, skip, limitSearch);
+
       actionsPeople.setPeople(people);
     } catch (error) {
       handleError(error);
@@ -54,9 +57,13 @@ const People: React.FC<any> = (props): JSX.Element => {
   const getMorePeople = async (): Promise<void> => {
     try {
       setLoadMoreChats(true);
+
       const skip = actionsPeople?.state?.people?.length || 0;
+
       const searchValue = actionsPeople?.state?.searchValue;
+
       const people = await userService.getUsers(searchValue, skip, limitSearch);
+
       actionsPeople?.addPeople(people);
     } catch (error) {
       handleError(error);
@@ -68,8 +75,11 @@ const People: React.FC<any> = (props): JSX.Element => {
   const changeValueSearch = async (searchValue: string): Promise<void> => {
     try {
       actionsPeople?.setSearchValue(searchValue);
+
       setLoadMoreChats(true);
+
       const people = await userService.getUsers(searchValue, 0, limitSearch);
+
       actionsPeople.setPeople(people);
     } catch (error) {
       handleError(error);
@@ -81,7 +91,9 @@ const People: React.FC<any> = (props): JSX.Element => {
   const addUserForMyChat = async (person: IPeopleItem): Promise<void> => {
     try {
       setLoad(true);
+
       const data = await chatService.create(actionsUser.state._id, person._id);
+
       props.navigation.navigate('Conversation', {
         chat: data.chat,
       });
@@ -108,6 +120,11 @@ const People: React.FC<any> = (props): JSX.Element => {
       />
     );
   };
+
+  const dataSource = data.map((el: IPeopleItem, key: number) => ({
+    ...el,
+    key: key,
+  }));
 
   return (
     <ViewGradient style={styles.imageBackground}>
@@ -138,10 +155,7 @@ const People: React.FC<any> = (props): JSX.Element => {
             ref={flatListRef}
             style={styles.containerList}
             contentContainerStyle={styles.containerListStyle}
-            data={data.map((el: IPeopleItem, key: number) => ({
-              ...el,
-              key: key,
-            }))}
+            data={dataSource}
             keyExtractor={(item) => `people-${item.key}`}
             renderItem={renderItem}
             horizontal={false}
