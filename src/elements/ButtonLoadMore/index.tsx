@@ -18,8 +18,8 @@ export const ButtonLoadMore: React.FC<IButtonLoadMoreProps> = (
       animationClick={'pulse'}
       iconRight={
         <Ionicons
-          name={'add-circle-outline'}
-          size={setSize(30)}
+          name={'reload-outline'}
+          size={setSize(25)}
           color={props?.colorComponents}
         />
       }
