@@ -23,23 +23,31 @@ import ModalAlterPassword from './components/ModalAlterPassword';
 const Profile: React.FC<any> = (props): JSX.Element => {
   // actions state store
   const {actionsUser, actionsSocket} = IndexActionsStore();
+
   const user = actionsUser?.state;
+
   const globalSocket = actionsSocket.socketStateStore?.socket;
 
   const [image, setImage] = useState<Asset>(null);
-  const [imageLoad, setImageLoad] = useState(false);
+
+  const [imageLoad, setImageLoad] = useState<boolean>(false);
+
   const [showModalAlterFullName, setShowModalAlterFullName] = useState<boolean>(
     false,
   );
+
   const [showModalAlterEmail, setShowModalAlterEmail] = useState<boolean>(
     false,
   );
+
   const [showModalAlterPhone, setShowModalAlterPhone] = useState<boolean>(
     false,
   );
+
   const [showModalAlterPassword, setShowModalAlterPassword] = useState<boolean>(
     false,
   );
+
   const [showLogout, setShowLogout] = useState<boolean>(false);
 
   const showSnackbarToLogout = async () => {
@@ -102,6 +110,7 @@ const Profile: React.FC<any> = (props): JSX.Element => {
       quality: 1,
       cameraType: 'front',
     };
+
     ImagePicker.launchCamera(
       options,
       (response: ImagePicker.ImagePickerResponse | any) => {
@@ -155,7 +164,7 @@ const Profile: React.FC<any> = (props): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Loading description={'Bye'} show={showLogout} />
+      <Loading description={'Bye!'} show={showLogout} />
       <AvatarWithDescription
         onChooseAvatar={onChooseAvatar}
         onChooseAvatarCamera={onChooseAvatarCamera}

@@ -78,9 +78,6 @@ const People: React.FC<any> = (props): JSX.Element => {
     }
   };
 
-  // buscar users quando tocar no topo do scroll
-  const handleScroll = (event) => handleScrollEvent(event, getMorePeople);
-
   const addUserForMyChat = async (person: IPeopleItem): Promise<void> => {
     try {
       setLoad(true);
@@ -153,7 +150,7 @@ const People: React.FC<any> = (props): JSX.Element => {
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {
                 useNativeDriver: false,
-                listener: handleScroll,
+                listener: (event) => handleScrollEvent(event, getMorePeople),
               },
             )}
             scrollEventThrottle={32}
