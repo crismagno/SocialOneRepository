@@ -5,7 +5,7 @@ import {ICombineReducers} from '../types';
 
 const ActionsSocket = (): ISocketActions => {
   const dispatch = useDispatch();
-  const socketStateStore: ISocketInitialState = useSelector(
+  const state: ISocketInitialState = useSelector(
     (state: ICombineReducers): ISocketInitialState => state.socket,
   );
 
@@ -22,7 +22,7 @@ const ActionsSocket = (): ISocketActions => {
   };
 
   return {
-    socketStateStore,
+    state,
     connectSocket,
     disconnectSocket,
   };

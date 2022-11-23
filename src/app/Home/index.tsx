@@ -26,7 +26,7 @@ const Home: React.FC = (props): JSX.Element => {
     actionsConversation,
   } = IndexActionsStore();
 
-  const globalSocket = actionsSocket?.socketStateStore?.socket;
+  const globalSocket = actionsSocket?.state?.socket;
 
   const user = actionsUser?.state;
 

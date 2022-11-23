@@ -43,7 +43,7 @@ const Conversation: React.FC<any> = (props): JSX.Element => {
   //----------------- PART VARIABLES STORE ---------------------------------
   const {actionsSocket, actionsUser, actionsConversation} = IndexActionsStore();
 
-  const globalSocket = actionsSocket?.socketStateStore?.socket; // configuracoes do socket
+  const globalSocket = actionsSocket?.state?.socket; // configuracoes do socket
 
   const user = actionsUser?.state; // user do sistema
 

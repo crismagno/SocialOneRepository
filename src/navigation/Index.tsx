@@ -9,7 +9,7 @@ import {startNotifications} from '../helpers/notifications';
 const NavigationIndex: React.FC = (): JSX.Element => {
   const {actionsSocket} = IndexActionsStore();
 
-  const globalSocket = actionsSocket.socketStateStore?.socket;
+  const globalSocket = actionsSocket.state?.socket;
 
   /**
    * To start app set two methods,

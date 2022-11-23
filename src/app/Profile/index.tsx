@@ -26,7 +26,7 @@ const Profile: React.FC<any> = (props): JSX.Element => {
 
   const user = actionsUser?.state;
 
-  const globalSocket = actionsSocket.socketStateStore?.socket;
+  const globalSocket = actionsSocket.state?.socket;
 
   const [image, setImage] = useState<Asset>(null);
 

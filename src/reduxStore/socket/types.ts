@@ -13,7 +13,7 @@ export interface IActionReducer {
 }
 
 export interface ISocketActions {
-  socketStateStore: ISocketInitialState;
+  state: ISocketInitialState;
   connectSocket: () => void;
   disconnectSocket: () => void;
 }
