@@ -97,13 +97,16 @@ const ListChat: React.FC<any> = (props): JSX.Element => {
   const changeValueSearch = async (searchValue: string): Promise<void> => {
     try {
       actionsChat?.setSearchValue(searchValue);
+
       setLoadMoreChats(true);
+
       const data = await chatService.getChatsByUser(
         user._id,
         searchValue,
         0,
         limitSearch,
       );
+
       actionsChat.setChats(data?.chats);
     } catch (error) {
       handleError(error);

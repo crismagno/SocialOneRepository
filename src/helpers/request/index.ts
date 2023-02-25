@@ -19,7 +19,9 @@ export const requestApi = async (
 
   if (params.authorization) {
     const token: string = await StateRequestSocial.getTokenUser();
+
     if (!token) throw 'Token not exist';
+
     headers['Authorization'] = `Bearer ${token}`;
   }
 

@@ -1,16 +1,16 @@
-import { TCode } from "../../types";
+import {TCode} from '../../types';
 
 export interface IValidateCode {
-    userId: string;
-    code: string;
-    typeCode: TCode;
-};
+  userId: string;
+  code: string;
+  typeCode: TCode;
+}
 
 export interface IResendCode {
-    userId: string;
-    typeCode: TCode;
-};
+  userId: string;
+  typeCode: TCode;
+}
 
 export interface ICodeResponse {
-    message: string; 
+  message: string;
 }
